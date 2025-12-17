@@ -1,0 +1,695 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Meeting Room Schedule</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+            color: #333;
+        }
+
+        .header {
+            background: white;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+            padding: 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            animation: slideDown 0.5s ease;
+        }
+
+        .header-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 25px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .header-title {
+            flex: 1;
+            min-width: 250px;
+        }
+
+        .header-title h1 {
+            font-size: 1.8em;
+            font-weight: 600;
+            color: #2c3e50;
+            margin-bottom: 5px;
+            letter-spacing: -0.5px;
+        }
+
+        .header-subtitle {
+            font-size: 0.95em;
+            color: #7f8c8d;
+            font-weight: 400;
+        }
+
+        .filter-tabs {
+            display: flex;
+            gap: 8px;
+            background: #f8f9fa;
+            padding: 6px;
+            border-radius: 12px;
+        }
+
+        .tab {
+            padding: 10px 24px;
+            background: transparent;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            color: #5a6c7d;
+            font-weight: 500;
+            font-size: 0.95em;
+            white-space: nowrap;
+        }
+
+        .tab.active {
+            background: #2c3e50;
+            color: white;
+            box-shadow: 0 2px 8px rgba(44, 62, 80, 0.2);
+        }
+
+        .tab:hover:not(.active) {
+            background: rgba(44, 62, 80, 0.08);
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 30px;
+        }
+
+        .schedule-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
+            gap: 20px;
+            animation: fadeIn 0.6s ease;
+        }
+
+        .schedule-card {
+            background: white;
+            border-radius: 12px;
+            padding: 28px;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            border-left: 4px solid #3498db;
+        }
+
+        .schedule-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 24px rgba(0,0,0,0.12);
+        }
+
+        .room-name {
+            font-size: 1.4em;
+            font-weight: 600;
+            color: #2c3e50;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .room-icon {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, #3498db, #2980b9);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2em;
+        }
+
+        .schedule-info {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .info-row {
+            display: flex;
+            align-items: flex-start;
+            gap: 14px;
+        }
+
+        .info-icon {
+            width: 36px;
+            height: 36px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.1em;
+            flex-shrink: 0;
+        }
+
+        .info-content {
+            flex: 1;
+        }
+
+        .info-label {
+            font-weight: 500;
+            color: #7f8c8d;
+            font-size: 0.85em;
+            margin-bottom: 4px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .info-value {
+            color: #2c3e50;
+            font-size: 1em;
+            font-weight: 400;
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 6px 16px;
+            border-radius: 6px;
+            font-size: 0.85em;
+            font-weight: 600;
+            background: #27ae60;
+            color: white;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .status-badge.ongoing {
+            background: #e67e22;
+            animation: pulse 2s infinite;
+        }
+
+        .status-badge.upcoming {
+            background: #3498db;
+        }
+
+        .status-badge.completed {
+            background: #95a5a6;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 80px 20px;
+            color: #7f8c8d;
+            font-size: 1.1em;
+        }
+
+        .loading-spinner {
+            width: 50px;
+            height: 50px;
+            border: 4px solid #e8e8e8;
+            border-top-color: #3498db;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 20px;
+        }
+
+        .error {
+            background: #fff5f5;
+            color: #c0392b;
+            padding: 30px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            border-left: 4px solid #e74c3c;
+        }
+
+        .error-title {
+            font-weight: 600;
+            font-size: 1.2em;
+            margin-bottom: 12px;
+        }
+
+        .error-details {
+            font-size: 0.95em;
+            line-height: 1.6;
+            color: #8b3a34;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 80px 30px;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+        }
+
+        .empty-state-icon {
+            font-size: 4em;
+            margin-bottom: 20px;
+            opacity: 0.5;
+        }
+
+        .empty-state h3 {
+            color: #2c3e50;
+            font-size: 1.5em;
+            margin-bottom: 12px;
+            font-weight: 600;
+        }
+
+        .empty-state p {
+            color: #7f8c8d;
+            font-size: 1em;
+        }
+
+        .footer {
+            text-align: center;
+            color: #7f8c8d;
+            font-size: 0.85em;
+            margin-top: 40px;
+            padding-bottom: 20px;
+        }
+
+        @keyframes slideDown {
+            from {
+                transform: translateY(-100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                opacity: 1;
+            }
+            50% {
+                opacity: 0.7;
+            }
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        @media (max-width: 968px) {
+            .header-content {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .filter-tabs {
+                width: 100%;
+                justify-content: center;
+            }
+
+            .header-title h1 {
+                font-size: 1.5em;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .schedule-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .tab {
+                padding: 8px 16px;
+                font-size: 0.9em;
+            }
+
+            .container {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="header-content">
+            <div class="header-title">
+                <h1>Meeting Room Schedule</h1>
+                <p class="header-subtitle">Bangor Group Indonesia</p>
+            </div>
+            <div class="filter-tabs">
+                <button class="tab active" data-filter="all">All Bookings</button>
+                <button class="tab" data-filter="today">Today</button>
+                <button class="tab" data-filter="upcoming">Upcoming</button>
+            </div>
+        </div>
+    </header>
+
+    <div class="container">
+        <div id="scheduleContainer">
+            <div class="loading">
+                <div class="loading-spinner"></div>
+                Loading schedule data...
+            </div>
+        </div>
+
+        <div class="footer">
+            Last updated: <span id="lastUpdate">-</span>
+        </div>
+    </div>
+
+    <script>
+        // ========================================
+        // 🔧 GANTI LINK GOOGLE SHEET LO DI SINI!
+        // ========================================
+        const GOOGLE_SHEET_URL = 'https://docs.google.com/spreadsheets/d/1WH5c2H0V9zQ0P0tNF6DVpcmKLDAWkCgf8z-b3mgn0WI/edit?usp=sharing';
+        // ========================================
+
+        let allSchedules = [];
+        let currentFilter = 'all';
+
+        document.querySelectorAll('.tab').forEach(tab => {
+            tab.addEventListener('click', function() {
+                document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+                this.classList.add('active');
+                currentFilter = this.dataset.filter;
+                renderSchedules();
+            });
+        });
+
+        window.addEventListener('DOMContentLoaded', loadSchedule);
+
+        async function loadSchedule() {
+            const container = document.getElementById('scheduleContainer');
+            
+            try {
+                const csvUrl = convertToCSVUrl(GOOGLE_SHEET_URL);
+
+                const response = await fetch(csvUrl);
+                if (!response.ok) {
+                    throw new Error('Unable to fetch data from Google Sheets');
+                }
+                
+                const csvText = await response.text();
+                allSchedules = parseCSV(csvText);
+
+                if (allSchedules.length === 0) {
+                    container.innerHTML = `
+                        <div class="error">
+                            <div class="error-title">No Data Available</div>
+                            <div class="error-details">
+                                Please ensure:<br>
+                                • Google Sheet is published to web as CSV<br>
+                                • Sheet contains valid booking data<br>
+                                • Sheet is not in private/restricted mode
+                            </div>
+                        </div>
+                    `;
+                    return;
+                }
+
+                renderSchedules();
+                updateLastRefreshTime();
+
+            } catch (error) {
+                console.error('Error:', error);
+                container.innerHTML = `
+                    <div class="error">
+                        <div class="error-title">Error Loading Schedule</div>
+                        <div class="error-details">
+                            ${error.message}<br><br>
+                            Possible causes:<br>
+                            • Google Sheet has not been published to web<br>
+                            • Invalid Google Sheet URL configuration<br>
+                            • Browser is blocking the request<br>
+                            • Sheet access is restricted
+                        </div>
+                    </div>
+                `;
+            }
+        }
+
+        function convertToCSVUrl(url) {
+            url = url.replace(/\/+$/, '').split('?')[0].split('#')[0];
+            
+            const match = url.match(/\/spreadsheets\/d\/([a-zA-Z0-9-_]+)/);
+            if (!match) {
+                throw new Error('Invalid Google Sheets URL format');
+            }
+            
+            const spreadsheetId = match[1];
+            const gidMatch = url.match(/[#&]gid=([0-9]+)/);
+            const gid = gidMatch ? gidMatch[1] : '0';
+            
+            return `https://docs.google.com/spreadsheets/d/${spreadsheetId}/export?format=csv&gid=${gid}`;
+        }
+
+        function parseCSV(csvText) {
+            const lines = csvText.trim().split('\n');
+            if (lines.length < 2) return [];
+            
+            const schedules = [];
+            
+            for (let i = 1; i < lines.length; i++) {
+                const line = lines[i].trim();
+                if (!line) continue;
+                
+                const columns = parseCSVLine(line);
+                
+                if (columns.length < 6) continue;
+                if (!columns[0] || !columns[1] || !columns[2] || !columns[3]) continue;
+                
+                schedules.push({
+                    date: columns[0].trim(),
+                    startTime: columns[1].trim(),
+                    endTime: columns[2].trim(),
+                    room: columns[3].trim(),
+                    pic: columns[4].trim() || 'N/A',
+                    purpose: columns[5].trim() || 'N/A'
+                });
+            }
+            
+            return schedules;
+        }
+
+        function parseCSVLine(line) {
+            const result = [];
+            let current = '';
+            let inQuotes = false;
+            
+            for (let i = 0; i < line.length; i++) {
+                const char = line[i];
+                const nextChar = line[i + 1];
+                
+                if (char === '"') {
+                    if (inQuotes && nextChar === '"') {
+                        current += '"';
+                        i++;
+                    } else {
+                        inQuotes = !inQuotes;
+                    }
+                } else if (char === ',' && !inQuotes) {
+                    result.push(current);
+                    current = '';
+                } else {
+                    current += char;
+                }
+            }
+            
+            result.push(current);
+            return result.map(s => s.trim());
+        }
+
+        function renderSchedules() {
+            const container = document.getElementById('scheduleContainer');
+            let filtered = allSchedules;
+
+            const today = new Date();
+            today.setHours(0, 0, 0, 0);
+
+            if (currentFilter === 'today') {
+                filtered = allSchedules.filter(s => {
+                    const schedDate = parseDate(s.date);
+                    return schedDate && schedDate.getTime() === today.getTime();
+                });
+            } else if (currentFilter === 'upcoming') {
+                filtered = allSchedules.filter(s => {
+                    const schedDate = parseDate(s.date);
+                    return schedDate && schedDate >= today;
+                });
+            }
+
+            if (filtered.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <div class="empty-state-icon">📅</div>
+                        <h3>No Bookings Found</h3>
+                        <p>There are currently no meeting room reservations matching your filter criteria.</p>
+                    </div>
+                `;
+                return;
+            }
+
+            filtered.sort((a, b) => {
+                const dateA = parseDate(a.date);
+                const dateB = parseDate(b.date);
+                if (dateA && dateB && dateA.getTime() !== dateB.getTime()) {
+                    return dateA - dateB;
+                }
+                return a.startTime.localeCompare(b.startTime);
+            });
+
+            container.innerHTML = `<div class="schedule-grid">${
+                filtered.map(schedule => createScheduleCard(schedule)).join('')
+            }</div>`;
+        }
+
+        function createScheduleCard(schedule) {
+            const status = getStatus(schedule.date, schedule.startTime, schedule.endTime);
+            
+            return `
+                <div class="schedule-card">
+                    <div class="room-name">
+                        <div class="room-icon">🏢</div>
+                        ${escapeHtml(schedule.room)}
+                    </div>
+                    <div class="schedule-info">
+                        <div class="info-row">
+                            <div class="info-icon">📅</div>
+                            <div class="info-content">
+                                <div class="info-label">Date</div>
+                                <div class="info-value">${formatDate(schedule.date)}</div>
+                            </div>
+                        </div>
+                        <div class="info-row">
+                            <div class="info-icon">🕐</div>
+                            <div class="info-content">
+                                <div class="info-label">Time</div>
+                                <div class="info-value">${escapeHtml(schedule.startTime)} - ${escapeHtml(schedule.endTime)}</div>
+                            </div>
+                        </div>
+                        <div class="info-row">
+                            <div class="info-icon">👤</div>
+                            <div class="info-content">
+                                <div class="info-label">Person in Charge</div>
+                                <div class="info-value">${escapeHtml(schedule.pic)}</div>
+                            </div>
+                        </div>
+                        <div class="info-row">
+                            <div class="info-icon">📋</div>
+                            <div class="info-content">
+                                <div class="info-label">Purpose</div>
+                                <div class="info-value">${escapeHtml(schedule.purpose)}</div>
+                            </div>
+                        </div>
+                        <div class="info-row">
+                            <div class="info-icon">⚡</div>
+                            <div class="info-content">
+                                <div class="info-label">Status</div>
+                                <span class="status-badge ${status.class}">${status.text}</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        function parseDate(dateStr) {
+            let match = dateStr.match(/^(\d{1,2})[\/\-](\d{1,2})[\/\-](\d{4})$/);
+            if (match) {
+                return new Date(match[3], match[2] - 1, match[1]);
+            }
+            
+            match = dateStr.match(/^(\d{4})[\/\-](\d{1,2})[\/\-](\d{1,2})$/);
+            if (match) {
+                return new Date(match[1], match[2] - 1, match[3]);
+            }
+            
+            return null;
+        }
+
+        function formatDate(dateStr) {
+            const date = parseDate(dateStr);
+            if (!date || isNaN(date.getTime())) return dateStr;
+            
+            const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+            return date.toLocaleDateString('en-US', options);
+        }
+
+        function getStatus(dateStr, startTime, endTime) {
+            const schedDate = parseDate(dateStr);
+            if (!schedDate || isNaN(schedDate.getTime())) {
+                return { text: 'Scheduled', class: '' };
+            }
+            
+            const now = new Date();
+            const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+            const schedDateOnly = new Date(schedDate.getFullYear(), schedDate.getMonth(), schedDate.getDate());
+            
+            if (schedDateOnly.getTime() === today.getTime()) {
+                const currentTime = now.getHours() * 60 + now.getMinutes();
+                const start = timeToMinutes(startTime);
+                const end = timeToMinutes(endTime);
+                
+                if (start !== null && end !== null) {
+                    if (currentTime >= start && currentTime <= end) {
+                        return { text: 'In Progress', class: 'ongoing' };
+                    } else if (currentTime < start) {
+                        return { text: 'Today', class: 'upcoming' };
+                    }
+                }
+            } else if (schedDateOnly > today) {
+                return { text: 'Scheduled', class: 'upcoming' };
+            }
+            
+            return { text: 'Completed', class: 'completed' };
+        }
+
+        function timeToMinutes(timeStr) {
+            const match = timeStr.match(/^(\d{1,2}):(\d{2})/);
+            if (!match) return null;
+            return parseInt(match[1]) * 60 + parseInt(match[2]);
+        }
+
+        function updateLastRefreshTime() {
+            const now = new Date();
+            const timeStr = now.toLocaleString('en-US', { 
+                year: 'numeric',
+                month: 'short',
+                day: 'numeric',
+                hour: '2-digit', 
+                minute: '2-digit',
+                second: '2-digit',
+                hour12: false
+            });
+            document.getElementById('lastUpdate').textContent = timeStr;
+        }
+
+        setInterval(() => {
+            loadSchedule();
+        }, 300000);
+    </script>
+</body>
+</html>
