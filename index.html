@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Meeting Room Schedule</title>
+    <title>Meeting Room Booking</title>
     <style>
         * {
             margin: 0;
@@ -12,245 +12,590 @@
         }
 
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+            color: #1e293b;
             min-height: 100vh;
-            color: #333;
         }
 
-        .header {
-            background: white;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.08);
-            padding: 0;
-            position: sticky;
-            top: 0;
-            z-index: 100;
-            animation: slideDown 0.5s ease;
+        header {
+            padding: 40px 20px;
+            margin-bottom: 40px;
+            background: rgba(255, 255, 255, 0.9);
+            border-bottom: 1px solid rgba(16, 185, 129, 0.2);
+            backdrop-filter: blur(10px);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
         }
 
-        .header-content {
-            max-width: 1400px;
+        .header-container {
+            max-width: 1200px;
             margin: 0 auto;
-            padding: 25px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+        }
+
+        .header-left {
+            text-align: left;
+        }
+
+        .header-right {
+            text-align: right;
+        }
+
+        h1 {
+            font-size: 2.5em;
+            font-weight: 700;
+            margin-bottom: 5px;
+            background: linear-gradient(135deg, #059669 0%, #10b981 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .company-name {
+            color: #059669;
+            font-size: 1.2em;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+        }
+
+        .datetime-info {
+            color: #64748b;
+            font-size: 1em;
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+            align-items: flex-end;
+        }
+
+        .datetime-info span {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .subtitle {
+            color: #64748b;
+            font-size: 1.1em;
+        }
+
+        .content-wrapper {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px 40px 20px;
+        }
+
+        /* Floating Button for Availability Checker */
+        .availability-fab {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, #059669 0%, #10b981 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 4px 20px rgba(16, 185, 129, 0.3);
+            transition: all 0.3s ease;
+            z-index: 1000;
+        }
+
+        .availability-fab:hover {
+            transform: scale(1.1);
+            box-shadow: 0 6px 25px rgba(16, 185, 129, 0.4);
+        }
+
+        .availability-fab:active {
+            transform: scale(0.95);
+        }
+
+        .availability-fab svg {
+            width: 28px;
+            height: 28px;
+            fill: white;
+        }
+
+        .availability-fab-text {
+            position: absolute;
+            right: 70px;
+            background: rgba(0, 0, 0, 0.8);
+            color: white;
+            padding: 8px 12px;
+            border-radius: 6px;
+            font-size: 0.9em;
+            white-space: nowrap;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+        }
+
+        .availability-fab:hover .availability-fab-text {
+            opacity: 1;
+        }
+
+        /* Sidebar Styles */
+        .sidebar-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 2000;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .sidebar-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .availability-sidebar {
+            position: fixed;
+            top: 0;
+            right: -400px;
+            width: 400px;
+            height: 100%;
+            background: white;
+            box-shadow: -4px 0 20px rgba(0, 0, 0, 0.1);
+            z-index: 2001;
+            transition: right 0.3s ease;
+            overflow-y: auto;
+        }
+
+        .availability-sidebar.active {
+            right: 0;
+        }
+
+        .sidebar-header {
+            background: linear-gradient(135deg, #059669 0%, #10b981 100%);
+            color: white;
+            padding: 20px;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            flex-wrap: wrap;
-            gap: 20px;
         }
 
-        .header-title {
-            flex: 1;
-            min-width: 250px;
-        }
-
-        .header-title h1 {
-            font-size: 1.8em;
+        .sidebar-header h2 {
+            font-size: 1.3em;
             font-weight: 600;
-            color: #2c3e50;
-            margin-bottom: 5px;
-            letter-spacing: -0.5px;
         }
 
-        .header-subtitle {
-            font-size: 0.95em;
-            color: #7f8c8d;
-            font-weight: 400;
-        }
-
-        .filter-tabs {
-            display: flex;
-            gap: 8px;
-            background: #f8f9fa;
-            padding: 6px;
-            border-radius: 12px;
-        }
-
-        .tab {
-            padding: 10px 24px;
-            background: transparent;
+        .close-sidebar {
+            background: rgba(255, 255, 255, 0.2);
             border: none;
-            border-radius: 8px;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
             cursor: pointer;
             transition: all 0.3s ease;
-            color: #5a6c7d;
-            font-weight: 500;
-            font-size: 0.95em;
-            white-space: nowrap;
         }
 
-        .tab.active {
-            background: #2c3e50;
+        .close-sidebar:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: rotate(90deg);
+        }
+
+        .close-sidebar svg {
+            width: 18px;
+            height: 18px;
+            fill: white;
+        }
+
+        .sidebar-content {
+            padding: 20px;
+        }
+
+        .availability-form {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+
+        .form-group label {
+            font-size: 0.9em;
+            font-weight: 600;
+            color: #475569;
+        }
+
+        .form-group input {
+            padding: 10px 15px;
+            border: 1px solid rgba(16, 185, 129, 0.3);
+            border-radius: 8px;
+            font-size: 1em;
+            transition: all 0.3s ease;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: #10b981;
+            box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.1);
+        }
+
+        .time-hint {
+            font-size: 0.8em;
+            color: #94a3b8;
+            margin-top: 2px;
+        }
+
+        .check-button {
+            padding: 12px 24px;
+            background: linear-gradient(135deg, #059669 0%, #10b981 100%);
             color: white;
-            box-shadow: 0 2px 8px rgba(44, 62, 80, 0.2);
+            border: none;
+            border-radius: 8px;
+            font-size: 1em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 10px;
         }
 
-        .tab:hover:not(.active) {
-            background: rgba(44, 62, 80, 0.08);
+        .check-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(16, 185, 129, 0.3);
         }
 
-        .container {
-            max-width: 1400px;
-            margin: 0 auto;
-            padding: 30px;
+        .check-button:active {
+            transform: translateY(0);
         }
 
-        .schedule-grid {
+        .availability-results {
+            margin-top: 20px;
+            display: none;
+        }
+
+        .availability-results.active {
+            display: block;
+        }
+
+        .result-title {
+            font-size: 1.1em;
+            font-weight: 600;
+            margin-bottom: 12px;
+            color: #059669;
+        }
+
+        .sidebar-rooms-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
-            gap: 20px;
-            animation: fadeIn 0.6s ease;
+            grid-template-columns: 1fr;
+            gap: 12px;
+            margin-bottom: 20px;
         }
 
-        .schedule-card {
-            background: white;
+        .sidebar-room-card {
+            background: rgba(255, 255, 255, 0.95);
+            border: 1px solid rgba(16, 185, 129, 0.2);
             border-radius: 12px;
-            padding: 28px;
-            box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+            padding: 15px;
+            cursor: pointer;
             transition: all 0.3s ease;
             position: relative;
             overflow: hidden;
-            border-left: 4px solid #3498db;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
         }
 
-        .schedule-card:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 8px 24px rgba(0,0,0,0.12);
+        .sidebar-room-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: linear-gradient(90deg, #10b981 0%, #34d399 100%);
+            transform: scaleX(0);
+            transition: transform 0.3s ease;
+        }
+
+        .sidebar-room-card:hover {
+            transform: translateY(-3px);
+            border-color: #10b981;
+            box-shadow: 0 5px 15px rgba(16, 185, 129, 0.15);
+        }
+
+        .sidebar-room-card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .sidebar-room-card.available {
+            border-color: #10b981;
+            background: rgba(16, 185, 129, 0.05);
+        }
+
+        .sidebar-room-card.unavailable {
+            border-color: #ef4444;
+            background: rgba(239, 68, 68, 0.05);
+        }
+
+        .sidebar-room-card.unavailable::before {
+            background: linear-gradient(90deg, #ef4444 0%, #f87171 100%);
+        }
+
+        .sidebar-room-name {
+            font-size: 1.2em;
+            font-weight: 700;
+            margin-bottom: 6px;
+            color: #059669;
+        }
+
+        .sidebar-room-card.unavailable .sidebar-room-name {
+            color: #ef4444;
+        }
+
+        .sidebar-room-status {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 0.75em;
+            font-weight: 600;
+            background: rgba(16, 185, 129, 0.2);
+            color: #10b981;
+        }
+
+        .sidebar-room-card.unavailable .sidebar-room-status {
+            background: rgba(239, 68, 68, 0.2);
+            color: #ef4444;
+        }
+
+        .sidebar-room-booking-info {
+            margin-top: 8px;
+            font-size: 0.8em;
+            color: #64748b;
+        }
+
+        .rooms-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 25px;
+            margin-bottom: 40px;
+        }
+
+        .room-card {
+            background: rgba(255, 255, 255, 0.95);
+            border: 1px solid rgba(16, 185, 129, 0.2);
+            border-radius: 16px;
+            padding: 30px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+        }
+
+        .room-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(90deg, #10b981 0%, #34d399 100%);
+            transform: scaleX(0);
+            transition: transform 0.3s ease;
+        }
+
+        .room-card:hover {
+            transform: translateY(-5px);
+            border-color: #10b981;
+            box-shadow: 0 10px 30px rgba(16, 185, 129, 0.15);
+            background: rgba(255, 255, 255, 1);
+        }
+
+        .room-card:hover::before {
+            transform: scaleX(1);
         }
 
         .room-name {
-            font-size: 1.4em;
+            font-size: 1.8em;
+            font-weight: 700;
+            margin-bottom: 10px;
+            color: #059669;
+        }
+
+        .room-status {
+            display: inline-block;
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 0.85em;
             font-weight: 600;
-            color: #2c3e50;
-            margin-bottom: 20px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
+            background: rgba(16, 185, 129, 0.2);
+            color: #10b981;
         }
 
-        .room-icon {
-            width: 40px;
-            height: 40px;
-            background: linear-gradient(135deg, #3498db, #2980b9);
+        .schedule-view {
+            display: none;
+            animation: fadeIn 0.5s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .back-button {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 12px 24px;
+            background: rgba(255, 255, 255, 0.95);
+            border: 1px solid rgba(16, 185, 129, 0.3);
             border-radius: 10px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.2em;
+            color: #059669;
+            cursor: pointer;
+            font-size: 1em;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            margin-bottom: 30px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
         }
 
-        .schedule-info {
+        .back-button:hover {
+            background: rgba(16, 185, 129, 0.05);
+            border-color: #10b981;
+            transform: translateX(-5px);
+        }
+
+        .schedule-header {
+            background: rgba(255, 255, 255, 0.95);
+            border: 1px solid rgba(16, 185, 129, 0.2);
+            border-radius: 16px;
+            padding: 30px;
+            margin-bottom: 30px;
+            text-align: center;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+        }
+
+        .schedule-header h2 {
+            font-size: 2em;
+            color: #059669;
+            margin-bottom: 10px;
+        }
+
+        .schedule-list {
             display: flex;
             flex-direction: column;
-            gap: 16px;
+            gap: 15px;
         }
 
-        .info-row {
+        .schedule-date-group {
+            margin-bottom: 25px;
+        }
+
+        .schedule-date-header {
+            font-size: 1.3em;
+            font-weight: 600;
+            color: #059669;
+            margin-bottom: 15px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid rgba(16, 185, 129, 0.2);
+        }
+
+        .schedule-item {
+            background: rgba(255, 255, 255, 0.95);
+            border: 1px solid rgba(16, 185, 129, 0.2);
+            border-radius: 12px;
+            padding: 20px;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            margin-bottom: 15px;
+        }
+
+        .schedule-item::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 4px;
+            height: 100%;
+            background: #10b981;
+        }
+
+        .schedule-item:hover {
+            border-color: #10b981;
+            transform: translateX(5px);
+            box-shadow: 0 5px 20px rgba(16, 185, 129, 0.15);
+        }
+
+        .schedule-time {
+            font-size: 1.3em;
+            font-weight: 700;
+            color: #10b981;
+            margin-bottom: 8px;
+        }
+
+        .schedule-title {
+            font-size: 1.1em;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: #1e293b;
+        }
+
+        .schedule-meta {
             display: flex;
-            align-items: flex-start;
-            gap: 14px;
+            gap: 20px;
+            flex-wrap: wrap;
+            font-size: 0.95em;
+            color: #64748b;
         }
 
-        .info-icon {
-            width: 36px;
-            height: 36px;
-            background: #f8f9fa;
-            border-radius: 8px;
+        .schedule-meta span {
             display: flex;
             align-items: center;
-            justify-content: center;
-            font-size: 1.1em;
-            flex-shrink: 0;
-        }
-
-        .info-content {
-            flex: 1;
-        }
-
-        .info-label {
-            font-weight: 500;
-            color: #7f8c8d;
-            font-size: 0.85em;
-            margin-bottom: 4px;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-
-        .info-value {
-            color: #2c3e50;
-            font-size: 1em;
-            font-weight: 400;
-        }
-
-        .status-badge {
-            display: inline-block;
-            padding: 6px 16px;
-            border-radius: 6px;
-            font-size: 0.85em;
-            font-weight: 600;
-            background: #27ae60;
-            color: white;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-
-        .status-badge.ongoing {
-            background: #e67e22;
-            animation: pulse 2s infinite;
-        }
-
-        .status-badge.upcoming {
-            background: #3498db;
-        }
-
-        .status-badge.completed {
-            background: #95a5a6;
+            gap: 5px;
         }
 
         .loading {
             text-align: center;
-            padding: 80px 20px;
-            color: #7f8c8d;
+            padding: 60px 20px;
+            color: #64748b;
             font-size: 1.1em;
         }
 
-        .loading-spinner {
-            width: 50px;
-            height: 50px;
-            border: 4px solid #e8e8e8;
-            border-top-color: #3498db;
+        .spinner {
+            border: 3px solid rgba(16, 185, 129, 0.1);
+            border-top: 3px solid #10b981;
             border-radius: 50%;
+            width: 40px;
+            height: 40px;
             animation: spin 1s linear infinite;
             margin: 0 auto 20px;
         }
 
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
         .error {
-            background: #fff5f5;
-            color: #c0392b;
-            padding: 30px;
+            background: rgba(239, 68, 68, 0.1);
+            border: 1px solid rgba(239, 68, 68, 0.3);
             border-radius: 12px;
-            margin-bottom: 20px;
-            border-left: 4px solid #e74c3c;
-        }
-
-        .error-title {
-            font-weight: 600;
-            font-size: 1.2em;
-            margin-bottom: 12px;
-        }
-
-        .error-details {
-            font-size: 0.95em;
-            line-height: 1.6;
-            color: #8b3a34;
+            padding: 20px;
+            color: #ef4444;
+            text-align: center;
         }
 
         .empty-state {
             text-align: center;
-            padding: 80px 30px;
-            background: white;
-            border-radius: 12px;
-            box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+            padding: 60px 20px;
+            color: #64748b;
         }
 
         .empty-state-icon {
@@ -259,437 +604,738 @@
             opacity: 0.5;
         }
 
-        .empty-state h3 {
-            color: #2c3e50;
-            font-size: 1.5em;
-            margin-bottom: 12px;
-            font-weight: 600;
-        }
-
-        .empty-state p {
-            color: #7f8c8d;
-            font-size: 1em;
-        }
-
-        .footer {
-            text-align: center;
-            color: #7f8c8d;
-            font-size: 0.85em;
-            margin-top: 40px;
-            padding-bottom: 20px;
-        }
-
-        @keyframes slideDown {
-            from {
-                transform: translateY(-100%);
-                opacity: 0;
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2em;
             }
-            to {
-                transform: translateY(0);
-                opacity: 1;
-            }
-        }
 
-        @keyframes fadeIn {
-            from {
-                opacity: 0;
-            }
-            to {
-                opacity: 1;
-            }
-        }
-
-        @keyframes pulse {
-            0%, 100% {
-                opacity: 1;
-            }
-            50% {
-                opacity: 0.7;
-            }
-        }
-
-        @keyframes spin {
-            to {
-                transform: rotate(360deg);
-            }
-        }
-
-        @media (max-width: 968px) {
-            .header-content {
+            .header-container {
                 flex-direction: column;
+                align-items: flex-start;
+                gap: 20px;
+            }
+
+            .header-right {
+                text-align: left;
+                align-self: flex-start;
+            }
+
+            .datetime-info {
                 align-items: flex-start;
             }
 
-            .filter-tabs {
-                width: 100%;
-                justify-content: center;
-            }
-
-            .header-title h1 {
-                font-size: 1.5em;
-            }
-        }
-
-        @media (max-width: 768px) {
-            .schedule-grid {
+            .rooms-grid {
                 grid-template-columns: 1fr;
             }
 
-            .tab {
-                padding: 8px 16px;
-                font-size: 0.9em;
+            .schedule-meta {
+                flex-direction: column;
+                gap: 10px;
             }
 
-            .container {
-                padding: 20px;
+            .availability-sidebar {
+                width: 100%;
+                right: -100%;
+            }
+
+            .availability-fab {
+                bottom: 20px;
+                right: 20px;
+                width: 56px;
+                height: 56px;
+            }
+
+            .availability-fab svg {
+                width: 24px;
+                height: 24px;
+            }
+
+            .availability-fab-text {
+                display: none;
             }
         }
     </style>
 </head>
 <body>
-    <header class="header">
-        <div class="header-content">
-            <div class="header-title">
+    <header>
+        <div class="header-container">
+            <div class="header-left">
                 <h1>Meeting Room Schedule</h1>
-                <p class="header-subtitle">Bangor Group Indonesia</p>
+                <p class="company-name">Bangor Group Indonesia</p>
             </div>
-            <div class="filter-tabs">
-                <button class="tab active" data-filter="all">All Bookings</button>
-                <button class="tab" data-filter="today">Today</button>
-                <button class="tab" data-filter="upcoming">Upcoming</button>
+            <div class="header-right">
+                <div class="datetime-info">
+                    <span>📅 <span id="currentDate">-</span></span>
+                    <span>🕐 <span id="currentTime">-</span></span>
+                </div>
             </div>
         </div>
     </header>
 
-    <div class="container">
-        <div id="scheduleContainer">
-            <div class="loading">
-                <div class="loading-spinner"></div>
-                Loading schedule data...
+    <div class="content-wrapper">
+        <div id="roomsView" class="rooms-view">
+            <div class="rooms-grid">
+                <div class="room-card" onclick="showSchedule('Ningrat')">
+                    <div class="room-name">Ningrat</div>
+                    <div class="room-status">Lihat Jadwal</div>
+                </div>
+                <div class="room-card" onclick="showSchedule('Juragan')">
+                    <div class="room-name">Juragan</div>
+                    <div class="room-status">Lihat Jadwal</div>
+                </div>
+                <div class="room-card" onclick="showSchedule('Risk Taker')">
+                    <div class="room-name">Risk Taker</div>
+                    <div class="room-status">Lihat Jadwal</div>
+                </div>
+                <div class="room-card" onclick="showSchedule('Gym')">
+                    <div class="room-name">Gym</div>
+                    <div class="room-status">Lihat Jadwal</div>
+                </div>
+                <div class="room-card" onclick="showSchedule('Pak Aldi')">
+                    <div class="room-name">Pak Aldi</div>
+                    <div class="room-status">Lihat Jadwal</div>
+                </div>
+                <div class="room-card" onclick="showSchedule('Bangor Outlet')">
+                    <div class="room-name">Bangor Outlet</div>
+                    <div class="room-status">Lihat Jadwal</div>
+                </div>
+                <div class="room-card" onclick="showSchedule('Pizza Ranjang Outlet')">
+                    <div class="room-name">Pizza Ranjang Outlet</div>
+                    <div class="room-status">Lihat Jadwal</div>
+                </div>
             </div>
         </div>
 
-        <div class="footer">
-            Last updated: <span id="lastUpdate">-</span>
+        <div id="scheduleView" class="schedule-view">
+            <button class="back-button" onclick="showRooms()">
+                ← Kembali ke Daftar Ruangan
+            </button>
+            <div class="schedule-header">
+                <h2 id="currentRoom">-</h2>
+                <p class="subtitle">Jadwal Peminjaman</p>
+            </div>
+            <div id="scheduleContent">
+                <div class="loading">
+                    <div class="spinner"></div>
+                    <p>Memuat jadwal...</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Floating Action Button -->
+    <div class="availability-fab" onclick="toggleSidebar()">
+        <span class="availability-fab-text">Cek Ketersediaan Ruangan</span>
+        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+        </svg>
+    </div>
+
+    <!-- Sidebar Overlay -->
+    <div class="sidebar-overlay" onclick="closeSidebar()"></div>
+
+    <!-- Availability Sidebar -->
+    <div class="availability-sidebar">
+        <div class="sidebar-header">
+            <h2>Cek Ketersediaan Ruangan</h2>
+            <button class="close-sidebar" onclick="closeSidebar()">
+                <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/>
+                </svg>
+            </button>
+        </div>
+        <div class="sidebar-content">
+            <div class="availability-form">
+                <div class="form-group">
+                    <label for="checkDate">Tanggal</label>
+                    <input type="date" id="checkDate" required>
+                </div>
+                <div class="form-group">
+                    <label for="checkTime">Waktu</label>
+                    <input type="time" id="checkTime" min="00:00" max="23:59" step="60" required>
+                    <div class="time-hint">Format 24 jam (00:00 - 23:59)</div>
+                </div>
+                <button class="check-button" onclick="checkAvailability()">Cek Ketersediaan</button>
+            </div>
+            <div id="availabilityResults" class="availability-results">
+                <h3 class="result-title">Ruangan Tersedia</h3>
+                <div id="availableRooms" class="sidebar-rooms-grid"></div>
+                <h3 class="result-title">Ruangan Tidak Tersedia</h3>
+                <div id="unavailableRooms" class="sidebar-rooms-grid"></div>
+            </div>
         </div>
     </div>
 
     <script>
-        // ========================================
-        // 🔧 GANTI LINK GOOGLE SHEET LO DI SINI!
-        // ========================================
-        const GOOGLE_SHEET_URL = 'https://docs.google.com/spreadsheets/d/1WH5c2H0V9zQ0P0tNF6DVpcmKLDAWkCgf8z-b3mgn0WI/edit?usp=sharing';
-        // ========================================
+        const CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTvvHewile8pFiTtk_E11rk27pUGrQUbVrWjwQi45K1VOZC0Kuk_0oKsnIbXGSmtDuinyhS0uOnJjkH/pub?gid=0&single=true&output=csv';
 
-        let allSchedules = [];
-        let currentFilter = 'all';
+        let currentData = [];
+        let allRooms = ['Ningrat', 'Juragan', 'Risk Taker', 'Gym', 'Pak Aldi', 'Bangor Outlet', 'Pizza Ranjang Outlet'];
 
-        document.querySelectorAll('.tab').forEach(tab => {
-            tab.addEventListener('click', function() {
-                document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-                this.classList.add('active');
-                currentFilter = this.dataset.filter;
-                renderSchedules();
-            });
-        });
-
-        window.addEventListener('DOMContentLoaded', loadSchedule);
-
-        async function loadSchedule() {
-            const container = document.getElementById('scheduleContainer');
-            
-            try {
-                const csvUrl = convertToCSVUrl(GOOGLE_SHEET_URL);
-
-                const response = await fetch(csvUrl);
-                if (!response.ok) {
-                    throw new Error('Unable to fetch data from Google Sheets');
-                }
-                
-                const csvText = await response.text();
-                allSchedules = parseCSV(csvText);
-
-                if (allSchedules.length === 0) {
-                    container.innerHTML = `
-                        <div class="error">
-                            <div class="error-title">No Data Available</div>
-                            <div class="error-details">
-                                Please ensure:<br>
-                                • Google Sheet is published to web as CSV<br>
-                                • Sheet contains valid booking data<br>
-                                • Sheet is not in private/restricted mode
-                            </div>
-                        </div>
-                    `;
-                    return;
-                }
-
-                renderSchedules();
-                updateLastRefreshTime();
-
-            } catch (error) {
-                console.error('Error:', error);
-                container.innerHTML = `
-                    <div class="error">
-                        <div class="error-title">Error Loading Schedule</div>
-                        <div class="error-details">
-                            ${error.message}<br><br>
-                            Possible causes:<br>
-                            • Google Sheet has not been published to web<br>
-                            • Invalid Google Sheet URL configuration<br>
-                            • Browser is blocking the request<br>
-                            • Sheet access is restricted
-                        </div>
-                    </div>
-                `;
-            }
-        }
-
-        function convertToCSVUrl(url) {
-            url = url.replace(/\/+$/, '').split('?')[0].split('#')[0];
-            
-            const match = url.match(/\/spreadsheets\/d\/([a-zA-Z0-9-_]+)/);
-            if (!match) {
-                throw new Error('Invalid Google Sheets URL format');
-            }
-            
-            const spreadsheetId = match[1];
-            const gidMatch = url.match(/[#&]gid=([0-9]+)/);
-            const gid = gidMatch ? gidMatch[1] : '0';
-            
-            return `https://docs.google.com/spreadsheets/d/${spreadsheetId}/export?format=csv&gid=${gid}`;
-        }
-
-        function parseCSV(csvText) {
-            const lines = csvText.trim().split('\n');
-            if (lines.length < 2) return [];
-            
-            const schedules = [];
-            
-            for (let i = 1; i < lines.length; i++) {
-                const line = lines[i].trim();
-                if (!line) continue;
-                
-                const columns = parseCSVLine(line);
-                
-                if (columns.length < 6) continue;
-                if (!columns[0] || !columns[1] || !columns[2] || !columns[3]) continue;
-                
-                schedules.push({
-                    date: columns[0].trim(),
-                    startTime: columns[1].trim(),
-                    endTime: columns[2].trim(),
-                    room: columns[3].trim(),
-                    pic: columns[4].trim() || 'N/A',
-                    purpose: columns[5].trim() || 'N/A'
-                });
-            }
-            
-            return schedules;
-        }
-
-        function parseCSVLine(line) {
-            const result = [];
-            let current = '';
-            let inQuotes = false;
-            
-            for (let i = 0; i < line.length; i++) {
-                const char = line[i];
-                const nextChar = line[i + 1];
-                
-                if (char === '"') {
-                    if (inQuotes && nextChar === '"') {
-                        current += '"';
-                        i++;
-                    } else {
-                        inQuotes = !inQuotes;
-                    }
-                } else if (char === ',' && !inQuotes) {
-                    result.push(current);
-                    current = '';
-                } else {
-                    current += char;
-                }
-            }
-            
-            result.push(current);
-            return result.map(s => s.trim());
-        }
-
-        function renderSchedules() {
-            const container = document.getElementById('scheduleContainer');
-            let filtered = allSchedules;
-
-            const today = new Date();
-            today.setHours(0, 0, 0, 0);
-
-            if (currentFilter === 'today') {
-                filtered = allSchedules.filter(s => {
-                    const schedDate = parseDate(s.date);
-                    return schedDate && schedDate.getTime() === today.getTime();
-                });
-            } else if (currentFilter === 'upcoming') {
-                filtered = allSchedules.filter(s => {
-                    const schedDate = parseDate(s.date);
-                    return schedDate && schedDate >= today;
-                });
-            }
-
-            if (filtered.length === 0) {
-                container.innerHTML = `
-                    <div class="empty-state">
-                        <div class="empty-state-icon">📅</div>
-                        <h3>No Bookings Found</h3>
-                        <p>There are currently no meeting room reservations matching your filter criteria.</p>
-                    </div>
-                `;
-                return;
-            }
-
-            filtered.sort((a, b) => {
-                const dateA = parseDate(a.date);
-                const dateB = parseDate(b.date);
-                if (dateA && dateB && dateA.getTime() !== dateB.getTime()) {
-                    return dateA - dateB;
-                }
-                return a.startTime.localeCompare(b.startTime);
-            });
-
-            container.innerHTML = `<div class="schedule-grid">${
-                filtered.map(schedule => createScheduleCard(schedule)).join('')
-            }</div>`;
-        }
-
-        function createScheduleCard(schedule) {
-            const status = getStatus(schedule.date, schedule.startTime, schedule.endTime);
-            
-            return `
-                <div class="schedule-card">
-                    <div class="room-name">
-                        <div class="room-icon">🏢</div>
-                        ${escapeHtml(schedule.room)}
-                    </div>
-                    <div class="schedule-info">
-                        <div class="info-row">
-                            <div class="info-icon">📅</div>
-                            <div class="info-content">
-                                <div class="info-label">Date</div>
-                                <div class="info-value">${formatDate(schedule.date)}</div>
-                            </div>
-                        </div>
-                        <div class="info-row">
-                            <div class="info-icon">🕐</div>
-                            <div class="info-content">
-                                <div class="info-label">Time</div>
-                                <div class="info-value">${escapeHtml(schedule.startTime)} - ${escapeHtml(schedule.endTime)}</div>
-                            </div>
-                        </div>
-                        <div class="info-row">
-                            <div class="info-icon">👤</div>
-                            <div class="info-content">
-                                <div class="info-label">Person in Charge</div>
-                                <div class="info-value">${escapeHtml(schedule.pic)}</div>
-                            </div>
-                        </div>
-                        <div class="info-row">
-                            <div class="info-icon">📋</div>
-                            <div class="info-content">
-                                <div class="info-label">Purpose</div>
-                                <div class="info-value">${escapeHtml(schedule.purpose)}</div>
-                            </div>
-                        </div>
-                        <div class="info-row">
-                            <div class="info-icon">⚡</div>
-                            <div class="info-content">
-                                <div class="info-label">Status</div>
-                                <span class="status-badge ${status.class}">${status.text}</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            `;
-        }
-
-        function escapeHtml(text) {
-            const div = document.createElement('div');
-            div.textContent = text;
-            return div.innerHTML;
-        }
-
-        function parseDate(dateStr) {
-            let match = dateStr.match(/^(\d{1,2})[\/\-](\d{1,2})[\/\-](\d{4})$/);
-            if (match) {
-                return new Date(match[3], match[2] - 1, match[1]);
-            }
-            
-            match = dateStr.match(/^(\d{4})[\/\-](\d{1,2})[\/\-](\d{1,2})$/);
-            if (match) {
-                return new Date(match[1], match[2] - 1, match[3]);
-            }
-            
-            return null;
-        }
-
-        function formatDate(dateStr) {
-            const date = parseDate(dateStr);
-            if (!date || isNaN(date.getTime())) return dateStr;
-            
-            const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
-            return date.toLocaleDateString('en-US', options);
-        }
-
-        function getStatus(dateStr, startTime, endTime) {
-            const schedDate = parseDate(dateStr);
-            if (!schedDate || isNaN(schedDate.getTime())) {
-                return { text: 'Scheduled', class: '' };
-            }
-            
+        // Update date and time
+        function updateDateTime() {
             const now = new Date();
-            const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
-            const schedDateOnly = new Date(schedDate.getFullYear(), schedDate.getMonth(), schedDate.getDate());
             
-            if (schedDateOnly.getTime() === today.getTime()) {
-                const currentTime = now.getHours() * 60 + now.getMinutes();
-                const start = timeToMinutes(startTime);
-                const end = timeToMinutes(endTime);
-                
-                if (start !== null && end !== null) {
-                    if (currentTime >= start && currentTime <= end) {
-                        return { text: 'In Progress', class: 'ongoing' };
-                    } else if (currentTime < start) {
-                        return { text: 'Today', class: 'upcoming' };
-                    }
-                }
-            } else if (schedDateOnly > today) {
-                return { text: 'Scheduled', class: 'upcoming' };
-            }
+            const dateOptions = { 
+                weekday: 'long', 
+                year: 'numeric', 
+                month: 'long', 
+                day: 'numeric' 
+            };
+            const dateStr = now.toLocaleDateString('id-ID', dateOptions);
             
-            return { text: 'Completed', class: 'completed' };
-        }
-
-        function timeToMinutes(timeStr) {
-            const match = timeStr.match(/^(\d{1,2}):(\d{2})/);
-            if (!match) return null;
-            return parseInt(match[1]) * 60 + parseInt(match[2]);
-        }
-
-        function updateLastRefreshTime() {
-            const now = new Date();
-            const timeStr = now.toLocaleString('en-US', { 
-                year: 'numeric',
-                month: 'short',
-                day: 'numeric',
+            const timeStr = now.toLocaleTimeString('id-ID', { 
                 hour: '2-digit', 
                 minute: '2-digit',
                 second: '2-digit',
                 hour12: false
             });
-            document.getElementById('lastUpdate').textContent = timeStr;
+            
+            document.getElementById('currentDate').textContent = dateStr;
+            document.getElementById('currentTime').textContent = timeStr;
         }
 
-        setInterval(() => {
-            loadSchedule();
-        }, 300000);
+        // Set default date to today
+        function setDefaultDate() {
+            const today = new Date();
+            const year = today.getFullYear();
+            const month = String(today.getMonth() + 1).padStart(2, '0');
+            const day = String(today.getDate()).padStart(2, '0');
+            
+            document.getElementById('checkDate').value = `${year}-${month}-${day}`;
+        }
+
+        // Update every second
+        updateDateTime();
+        setInterval(updateDateTime, 1000);
+        setDefaultDate();
+
+        function showRooms() {
+            document.getElementById('roomsView').style.display = 'block';
+            document.getElementById('scheduleView').style.display = 'none';
+        }
+
+        function showSchedule(room) {
+            document.getElementById('roomsView').style.display = 'none';
+            document.getElementById('scheduleView').style.display = 'block';
+            document.getElementById('currentRoom').textContent = room;
+            loadSchedule(room);
+        }
+
+        // Sidebar functions
+        function toggleSidebar() {
+            const sidebar = document.querySelector('.availability-sidebar');
+            const overlay = document.querySelector('.sidebar-overlay');
+            
+            sidebar.classList.toggle('active');
+            overlay.classList.toggle('active');
+        }
+
+        function closeSidebar() {
+            const sidebar = document.querySelector('.availability-sidebar');
+            const overlay = document.querySelector('.sidebar-overlay');
+            
+            sidebar.classList.remove('active');
+            overlay.classList.remove('active');
+        }
+
+        function openSidebar() {
+            const sidebar = document.querySelector('.availability-sidebar');
+            const overlay = document.querySelector('.sidebar-overlay');
+            
+            sidebar.classList.add('active');
+            overlay.classList.add('active');
+        }
+
+        function parseCSV(text) {
+            const lines = text.split('\n');
+            return lines.map(line => {
+                const values = [];
+                let current = '';
+                let inQuotes = false;
+                
+                for (let i = 0; i < line.length; i++) {
+                    const char = line[i];
+                    if (char === '"') {
+                        inQuotes = !inQuotes;
+                    } else if (char === ',' && !inQuotes) {
+                        values.push(current.trim());
+                        current = '';
+                    } else {
+                        current += char;
+                    }
+                }
+                values.push(current.trim());
+                return values;
+            }).filter(row => row.some(cell => cell));
+        }
+
+        function normalizeTime(timeStr) {
+            // Normalize time string to ensure 24-hour format HH:MM
+            if (!timeStr) return '';
+            
+            // Remove any spaces and convert to uppercase
+            timeStr = timeStr.trim().toUpperCase();
+            
+            // If already in 24-hour format (HH:MM), return as is
+            if (/^\d{1,2}:\d{2}$/.test(timeStr)) {
+                const [hours, minutes] = timeStr.split(':');
+                const hourInt = parseInt(hours);
+                if (hourInt >= 0 && hourInt <= 23) {
+                    return `${hourInt.toString().padStart(2, '0')}:${minutes}`;
+                }
+            }
+            
+            // Convert 12-hour format with AM/PM to 24-hour format
+            const match = timeStr.match(/^(\d{1,2}):(\d{2})(AM|PM)?$/);
+            if (match) {
+                let [, hours, minutes, period] = match;
+                let hourInt = parseInt(hours);
+                
+                if (period === 'PM' && hourInt !== 12) {
+                    hourInt += 12;
+                } else if (period === 'AM' && hourInt === 12) {
+                    hourInt = 0;
+                } else if (!period && hourInt < 12) {
+                    // Default to AM if no period specified and hour < 12
+                    period = 'AM';
+                } else if (!period && hourInt >= 12) {
+                    // Default to PM if no period specified and hour >= 12
+                    period = 'PM';
+                    if (hourInt !== 12) hourInt += 12;
+                }
+                
+                if (hourInt >= 0 && hourInt <= 23) {
+                    return `${hourInt.toString().padStart(2, '0')}:${minutes}`;
+                }
+            }
+            
+            return timeStr; // Return original if can't parse
+        }
+
+        // Function to parse date in DD-MM-YYYY format and convert to YYYY-MM-DD for comparison
+        function parseDate(dateStr) {
+            if (!dateStr) return '';
+            
+            // Remove any spaces
+            dateStr = dateStr.trim();
+            
+            // Try to parse DD-MM-YYYY format
+            const match = dateStr.match(/^(\d{1,2})-(\d{1,2})-(\d{4})$/);
+            if (match) {
+                const [, day, month, year] = match;
+                const dayNum = parseInt(day);
+                const monthNum = parseInt(month);
+                const yearNum = parseInt(year);
+                
+                // Validate date components
+                if (dayNum >= 1 && dayNum <= 31 && monthNum >= 1 && monthNum <= 12 && yearNum >= 2000 && yearNum <= 2100) {
+                    // Create date object to validate
+                    const testDate = new Date(yearNum, monthNum - 1, dayNum);
+                    
+                    // Check if date is valid (e.g., not 31 February)
+                    if (testDate.getFullYear() === yearNum && testDate.getMonth() === monthNum - 1 && testDate.getDate() === dayNum) {
+                        // Return in YYYY-MM-DD format for consistent comparison
+                        return `${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`;
+                    }
+                }
+            }
+            
+            // Try to parse DD/MM/YYYY format
+            const slashMatch = dateStr.match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})$/);
+            if (slashMatch) {
+                const [, day, month, year] = slashMatch;
+                const dayNum = parseInt(day);
+                const monthNum = parseInt(month);
+                const yearNum = parseInt(year);
+                
+                // Validate date components
+                if (dayNum >= 1 && dayNum <= 31 && monthNum >= 1 && monthNum <= 12 && yearNum >= 2000 && yearNum <= 2100) {
+                    // Create date object to validate
+                    const testDate = new Date(yearNum, monthNum - 1, dayNum);
+                    
+                    // Check if date is valid
+                    if (testDate.getFullYear() === yearNum && testDate.getMonth() === monthNum - 1 && testDate.getDate() === dayNum) {
+                        // Return in YYYY-MM-DD format for consistent comparison
+                        return `${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`;
+                    }
+                }
+            }
+            
+            // If it's already in YYYY-MM-DD format, validate and return as is
+            if (/^\d{4}-\d{1,2}-\d{1,2}$/.test(dateStr)) {
+                const [year, month, day] = dateStr.split('-');
+                const yearNum = parseInt(year);
+                const monthNum = parseInt(month);
+                const dayNum = parseInt(day);
+                
+                if (yearNum >= 2000 && yearNum <= 2100 && monthNum >= 1 && monthNum <= 12 && dayNum >= 1 && dayNum <= 31) {
+                    const testDate = new Date(yearNum, monthNum - 1, dayNum);
+                    
+                    if (testDate.getFullYear() === yearNum && testDate.getMonth() === monthNum - 1 && testDate.getDate() === dayNum) {
+                        return dateStr;
+                    }
+                }
+            }
+            
+            // Return empty string if can't parse or invalid
+            return '';
+        }
+
+        // Function to format date for display
+        function formatDateForDisplay(dateStr) {
+            if (!dateStr) return '';
+            
+            // Use original date string if it's already in a displayable format
+            // Otherwise, try to parse and format it
+            const normalizedDate = parseDate(dateStr);
+            
+            if (!normalizedDate) {
+                // If parsing failed, return original string
+                return dateStr;
+            }
+            
+            // Create a Date object from normalized date
+            const [year, month, day] = normalizedDate.split('-').map(Number);
+            const dateObj = new Date(year, month - 1, day);
+            
+            // Check if date is valid
+            if (isNaN(dateObj.getTime())) {
+                return dateStr; // Return original if invalid
+            }
+            
+            // Format date for display
+            return dateObj.toLocaleDateString('id-ID', {
+                weekday: 'long',
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric'
+            });
+        }
+
+        // Function to check if a date is in the past
+        function isDateInPast(dateStr) {
+            if (!dateStr) return false;
+            
+            const normalizedDate = parseDate(dateStr);
+            if (!normalizedDate) return false;
+            
+            const [year, month, day] = normalizedDate.split('-').map(Number);
+            const bookingDate = new Date(year, month - 1, day);
+            
+            // Check if date is valid
+            if (isNaN(bookingDate.getTime())) {
+                return false;
+            }
+            
+            // Set time to end of day for comparison
+            bookingDate.setHours(23, 59, 59, 999);
+            
+            const today = new Date();
+            
+            return bookingDate < today;
+        }
+
+        // Function to check if a time is in the past for today's date
+        function isTimeInPast(dateStr, timeStr) {
+            if (!dateStr || !timeStr) return false;
+            
+            const normalizedDate = parseDate(dateStr);
+            if (!normalizedDate) return false;
+            
+            const [year, month, day] = normalizedDate.split('-').map(Number);
+            const bookingDate = new Date(year, month - 1, day);
+            
+            // Check if date is valid
+            if (isNaN(bookingDate.getTime())) {
+                return false;
+            }
+            
+            const today = new Date();
+            
+            // If booking date is not today, it's not in the past
+            if (bookingDate.toDateString() !== today.toDateString()) {
+                return false;
+            }
+            
+            // Parse time
+            const [hours, minutes] = timeStr.split(':').map(Number);
+            if (isNaN(hours) || isNaN(minutes)) {
+                return false;
+            }
+            
+            const bookingTime = new Date();
+            bookingTime.setHours(hours, minutes, 0, 0);
+            
+            return bookingTime < today;
+        }
+
+        async function loadAllData() {
+            try {
+                const response = await fetch(CSV_URL);
+                
+                if (!response.ok) {
+                    throw new Error('Gagal mengambil data');
+                }
+
+                const csvText = await response.text();
+                const rows = parseCSV(csvText);
+
+                if (!rows || rows.length <= 1) {
+                    return [];
+                }
+
+                const data = rows.slice(1)
+                    .map(row => ({
+                        room: row[0] || '',
+                        date: parseDate(row[1] || ''), // Parse date to normalize format
+                        startTime: normalizeTime(row[2] || ''),
+                        endTime: normalizeTime(row[3] || ''),
+                        title: row[4] || '',
+                        pic: row[5] || '',
+                        notes: row[6] || ''
+                    }))
+                    .filter(item => item.date !== ''); // Filter out items with invalid dates
+
+                return data;
+            } catch (error) {
+                console.error('Error:', error);
+                return [];
+            }
+        }
+
+        async function checkAvailability() {
+            const checkDate = document.getElementById('checkDate').value;
+            const checkTime = document.getElementById('checkTime').value;
+            
+            if (!checkDate || !checkTime) {
+                alert('Silakan pilih tanggal dan waktu terlebih dahulu');
+                return;
+            }
+
+            const resultsContainer = document.getElementById('availabilityResults');
+            const availableContainer = document.getElementById('availableRooms');
+            const unavailableContainer = document.getElementById('unavailableRooms');
+            
+            resultsContainer.classList.add('active');
+            availableContainer.innerHTML = '<div class="loading"><div class="spinner"></div><p>Memeriksa ketersediaan...</p></div>';
+            unavailableContainer.innerHTML = '';
+
+            // Load all data
+            const allData = await loadAllData();
+            
+            // Check availability for each room
+            const availableRooms = [];
+            const unavailableRooms = [];
+
+            allRooms.forEach(room => {
+                const roomBookings = allData.filter(booking => 
+                    booking.room === room && 
+                    booking.date === checkDate
+                );
+
+                let isAvailable = true;
+                let conflictInfo = null;
+
+                for (const booking of roomBookings) {
+                    const bookingStart = booking.startTime;
+                    const bookingEnd = booking.endTime;
+                    
+                    // Check if the requested time conflicts with any booking
+                    if (checkTime >= bookingStart && checkTime < bookingEnd) {
+                        isAvailable = false;
+                        conflictInfo = {
+                            title: booking.title,
+                            startTime: bookingStart,
+                            endTime: bookingEnd,
+                            pic: booking.pic
+                        };
+                        break;
+                    }
+                }
+
+                if (isAvailable) {
+                    availableRooms.push(room);
+                } else {
+                    unavailableRooms.push({
+                        name: room,
+                        conflict: conflictInfo
+                    });
+                }
+            });
+
+            // Display results
+            let availableHTML = '';
+            if (availableRooms.length > 0) {
+                availableRooms.forEach(room => {
+                    availableHTML += `
+                        <div class="sidebar-room-card available" onclick="showScheduleFromSidebar('${room}')">
+                            <div class="sidebar-room-name">${room}</div>
+                            <div class="sidebar-room-status">Tersedia</div>
+                        </div>
+                    `;
+                });
+            } else {
+                availableHTML = `
+                    <div class="empty-state">
+                        <div class="empty-state-icon">🔍</div>
+                        <h3>Tidak Ada Ruangan Tersedia</h3>
+                        <p>Semua ruangan sudah dipesan pada waktu ini.</p>
+                    </div>
+                `;
+            }
+            availableContainer.innerHTML = availableHTML;
+
+            let unavailableHTML = '';
+            if (unavailableRooms.length > 0) {
+                unavailableRooms.forEach(room => {
+                    unavailableHTML += `
+                        <div class="sidebar-room-card unavailable" onclick="showScheduleFromSidebar('${room.name}')">
+                            <div class="sidebar-room-name">${room.name}</div>
+                            <div class="sidebar-room-status">Tidak Tersedia</div>
+                            <div class="sidebar-room-booking-info">
+                                <p>Dipesan: ${room.conflict.title}</p>
+                                <p>Waktu: ${room.conflict.startTime} - ${room.conflict.endTime}</p>
+                                <p>Oleh: ${room.conflict.pic}</p>
+                            </div>
+                        </div>
+                    `;
+                });
+            } else {
+                unavailableHTML = `
+                    <div class="empty-state">
+                        <div class="empty-state-icon">✅</div>
+                        <h3>Semua Ruangan Tersedia</h3>
+                        <p>Tidak ada ruangan yang dipesan pada waktu ini.</p>
+                    </div>
+                `;
+            }
+            unavailableContainer.innerHTML = unavailableHTML;
+        }
+
+        function showScheduleFromSidebar(room) {
+            closeSidebar(); // Close sidebar first
+            showSchedule(room); // Then show schedule
+        }
+
+        async function loadSchedule(room) {
+            const content = document.getElementById('scheduleContent');
+            content.innerHTML = '<div class="loading"><div class="spinner"></div><p>Memuat jadwal...</p></div>';
+
+            try {
+                const response = await fetch(CSV_URL);
+                
+                if (!response.ok) {
+                    throw new Error('Gagal mengambil data');
+                }
+
+                const csvText = await response.text();
+                const rows = parseCSV(csvText);
+
+                if (!rows || rows.length <= 1) {
+                    content.innerHTML = `
+                        <div class="empty-state">
+                            <div class="empty-state-icon">📅</div>
+                            <h3>Belum Ada Jadwal</h3>
+                            <p>Ruangan ini belum memiliki jadwal peminjaman.</p>
+                        </div>
+                    `;
+                    return;
+                }
+
+                // Filter data berdasarkan ruangan
+                let filteredData = rows.slice(1)
+                    .filter(row => row[0] === room)
+                    .map(row => ({
+                        room: row[0] || '',
+                        date: parseDate(row[1] || ''), // Parse date to normalize format
+                        startTime: normalizeTime(row[2] || ''),
+                        endTime: normalizeTime(row[3] || ''),
+                        title: row[4] || '',
+                        pic: row[5] || '',
+                        notes: row[6] || ''
+                    }))
+                    .filter(item => item.date !== ''); // Filter out items with invalid dates
+
+                // Filter out past bookings
+                filteredData = filteredData.filter(item => {
+                    // If date is in the past, exclude it
+                    if (isDateInPast(item.date)) {
+                        return false;
+                    }
+                    
+                    // If date is today but time is in the past, exclude it
+                    if (isTimeInPast(item.date, item.endTime)) {
+                        return false;
+                    }
+                    
+                    return true;
+                });
+
+                if (filteredData.length === 0) {
+                    content.innerHTML = `
+                        <div class="empty-state">
+                            <div class="empty-state-icon">📅</div>
+                            <h3>Belum Ada Jadwal Mendatang</h3>
+                            <p>Ruangan ini belum memiliki jadwal peminjaman mendatang.</p>
+                        </div>
+                    `;
+                    return;
+                }
+
+                // Group schedule items by date
+                const groupedByDate = {};
+                filteredData.forEach(item => {
+                    if (!groupedByDate[item.date]) {
+                        groupedByDate[item.date] = [];
+                    }
+                    groupedByDate[item.date].push(item);
+                });
+
+                let html = '<div class="schedule-list">';
+                
+                // Sort dates
+                const sortedDates = Object.keys(groupedByDate).sort();
+                
+                sortedDates.forEach(date => {
+                    const formattedDate = formatDateForDisplay(date);
+                    
+                    html += `
+                        <div class="schedule-date-group">
+                            <div class="schedule-date-header">${formattedDate}</div>
+                    `;
+                    
+                    groupedByDate[date].forEach(item => {
+                        html += `
+                            <div class="schedule-item">
+                                <div class="schedule-time">${item.startTime} - ${item.endTime}</div>
+                                <div class="schedule-title">${item.title}</div>
+                                <div class="schedule-meta">
+                                    <span>👤 ${item.pic}</span>
+                                    ${item.notes ? `<span>📝 ${item.notes}</span>` : ''}
+                                </div>
+                            </div>
+                        `;
+                    });
+                    
+                    html += '</div>';
+                });
+                
+                html += '</div>';
+
+                content.innerHTML = html;
+
+            } catch (error) {
+                console.error('Error:', error);
+                content.innerHTML = `
+                    <div class="error">
+                        <h3>⚠️ Gagal Memuat Data</h3>
+                        <p>Pastikan Google Sheet dapat diakses secara publik.</p>
+                        <p style="margin-top: 10px; font-size: 0.9em;">Error: ${error.message}</p>
+                    </div>
+                `;
+            }
+        }
     </script>
 </body>
 </html>
