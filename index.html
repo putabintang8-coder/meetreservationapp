@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="id">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -13,21 +14,50 @@
 
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
-            color: #1e293b;
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 25%, #1a365d 50%, #164e63 75%, #0f766e 100%);
+            background-attachment: fixed;
+            color: #f1f5f9;
             min-height: 100vh;
             display: flex;
             flex-direction: column;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(circle at 20% 50%, rgba(16, 185, 129, 0.05) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(59, 130, 246, 0.05) 0%, transparent 50%);
+            pointer-events: none;
+            z-index: -1;
         }
 
         header {
             padding: 40px 20px;
             margin-bottom: 40px;
-            background: rgba(255, 255, 255, 0.9);
-            border-bottom: 1px solid rgba(16, 185, 129, 0.2);
-            backdrop-filter: blur(10px);
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+            background: linear-gradient(135deg, rgba(15, 23, 42, 0.98) 0%, rgba(30, 41, 59, 0.98) 100%);
+            border-bottom: 2px solid rgba(16, 185, 129, 0.3);
+            backdrop-filter: blur(20px);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
             flex-shrink: 0;
+            animation: slideDown 0.6s ease-out;
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
         .header-container {
@@ -50,26 +80,52 @@
             font-size: 2.5em;
             font-weight: 700;
             margin-bottom: 5px;
-            background: linear-gradient(135deg, #059669 0%, #10b981 100%);
+            background: linear-gradient(135deg, #10b981 0%, #34d399 50%, #6ee7b7 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
+            letter-spacing: -1px;
+            animation: fadeInLeft 0.8s ease-out;
+        }
+
+        @keyframes fadeInLeft {
+            from {
+                opacity: 0;
+                transform: translateX(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
         }
 
         .company-name {
-            color: #059669;
+            color: #94a3b8;
             font-size: 1.2em;
             font-weight: 600;
             letter-spacing: 0.5px;
+            animation: fadeInLeft 0.9s ease-out 0.1s backwards;
         }
 
         .datetime-info {
-            color: #64748b;
+            color: #94a3b8;
             font-size: 1em;
             display: flex;
             flex-direction: column;
             gap: 5px;
             align-items: flex-end;
+            animation: fadeInRight 0.8s ease-out;
+        }
+
+        @keyframes fadeInRight {
+            from {
+                opacity: 0;
+                transform: translateX(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
         }
 
         .datetime-info span {
@@ -79,7 +135,7 @@
         }
 
         .subtitle {
-            color: #64748b;
+            color: #94a3b8;
             font-size: 1.1em;
         }
 
@@ -98,20 +154,37 @@
             right: 30px;
             width: 60px;
             height: 60px;
-            background: linear-gradient(135deg, #059669 0%, #10b981 100%);
+            background: linear-gradient(135deg, #059669 0%, #10b981 50%, #34d399 100%);
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
             cursor: pointer;
-            box-shadow: 0 4px 20px rgba(16, 185, 129, 0.3);
-            transition: all 0.3s ease;
+            box-shadow: 0 8px 25px rgba(16, 185, 129, 0.5);
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             z-index: 1000;
+            animation: bounceIn 0.6s ease-out 0.2s backwards;
+            border: 2px solid rgba(52, 211, 153, 0.3);
+        }
+
+        @keyframes bounceIn {
+            0% {
+                opacity: 0;
+                transform: scale(0.3) translateY(50px);
+            }
+            50% {
+                transform: scale(1.05);
+            }
+            100% {
+                opacity: 1;
+                transform: scale(1) translateY(0);
+            }
         }
 
         .availability-fab:hover {
-            transform: scale(1.1);
-            box-shadow: 0 6px 25px rgba(16, 185, 129, 0.4);
+            transform: scale(1.15) translateY(-5px);
+            box-shadow: 0 12px 35px rgba(16, 185, 129, 0.6);
+            background: linear-gradient(135deg, #10b981 0%, #34d399 50%, #6ee7b7 100%);
         }
 
         .availability-fab:active {
@@ -149,7 +222,7 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0, 0, 0, 0.5);
+            background: rgba(0, 0, 0, 0.7);
             z-index: 2000;
             opacity: 0;
             visibility: hidden;
@@ -167,11 +240,12 @@
             right: -400px;
             width: 400px;
             height: 100%;
-            background: white;
-            box-shadow: -4px 0 20px rgba(0, 0, 0, 0.1);
+            background: linear-gradient(135deg, rgba(15, 23, 42, 0.98) 0%, rgba(30, 41, 59, 0.95) 100%);
+            box-shadow: -8px 0 32px rgba(0, 0, 0, 0.5);
             z-index: 2001;
-            transition: right 0.3s ease;
+            transition: right 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
             overflow-y: auto;
+            border-left: 2px solid rgba(16, 185, 129, 0.2);
         }
 
         .availability-sidebar.active {
@@ -179,12 +253,13 @@
         }
 
         .sidebar-header {
-            background: linear-gradient(135deg, #059669 0%, #10b981 100%);
+            background: linear-gradient(135deg, #059669 0%, #10b981 50%, #34d399 100%);
             color: white;
             padding: 20px;
             display: flex;
             justify-content: space-between;
             align-items: center;
+            box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3);
         }
 
         .sidebar-header h2 {
@@ -207,7 +282,7 @@
 
         .close-sidebar:hover {
             background: rgba(255, 255, 255, 0.3);
-            transform: rotate(90deg);
+            transform: rotate(90deg) scale(1.1);
         }
 
         .close-sidebar svg {
@@ -235,49 +310,71 @@
         .form-group label {
             font-size: 0.9em;
             font-weight: 600;
-            color: #475569;
+            color: #cbd5e1;
         }
 
         .form-group input {
             padding: 10px 15px;
-            border: 1px solid rgba(16, 185, 129, 0.3);
+            border: 1px solid rgba(148, 163, 184, 0.3);
             border-radius: 8px;
             font-size: 1em;
+            background: rgba(30, 41, 59, 0.5);
+            color: #f1f5f9;
             transition: all 0.3s ease;
         }
 
         .form-group input:focus {
             outline: none;
             border-color: #10b981;
-            box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.1);
+            box-shadow: 0 0 0 4px rgba(16, 185, 129, 0.25), inset 0 2px 6px rgba(16, 185, 129, 0.1);
+            background: rgba(30, 41, 59, 0.8);
+            transform: translateY(-2px);
         }
 
         .time-hint {
             font-size: 0.8em;
-            color: #94a3b8;
+            color: #64748b;
             margin-top: 2px;
         }
 
         .check-button {
             padding: 12px 24px;
-            background: linear-gradient(135deg, #059669 0%, #10b981 100%);
+            background: linear-gradient(135deg, #059669 0%, #10b981 50%, #34d399 100%);
             color: white;
             border: none;
             border-radius: 8px;
             font-size: 1em;
             font-weight: 600;
             cursor: pointer;
-            transition: all 0.3s ease;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             margin-top: 10px;
+            box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .check-button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+            transition: left 0.6s ease;
+        }
+
+        .check-button:hover::before {
+            left: 100%;
         }
 
         .check-button:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(16, 185, 129, 0.3);
+            transform: translateY(-3px) scale(1.02);
+            box-shadow: 0 8px 25px rgba(16, 185, 129, 0.4);
         }
 
         .check-button:active {
-            transform: translateY(0);
+            transform: translateY(-1px) scale(0.98);
         }
 
         .availability-results {
@@ -293,7 +390,7 @@
             font-size: 1.1em;
             font-weight: 600;
             margin-bottom: 12px;
-            color: #059669;
+            color: #10b981;
         }
 
         .sidebar-rooms-grid {
@@ -304,15 +401,15 @@
         }
 
         .sidebar-room-card {
-            background: rgba(255, 255, 255, 0.95);
-            border: 1px solid rgba(16, 185, 129, 0.2);
+            background: rgba(30, 41, 59, 0.6);
+            border: 1px solid rgba(148, 163, 184, 0.2);
             border-radius: 12px;
             padding: 15px;
             cursor: pointer;
-            transition: all 0.3s ease;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             position: relative;
             overflow: hidden;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
         }
 
         .sidebar-room-card::before {
@@ -324,13 +421,15 @@
             height: 3px;
             background: linear-gradient(90deg, #10b981 0%, #34d399 100%);
             transform: scaleX(0);
-            transition: transform 0.3s ease;
+            transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            transform-origin: left;
         }
 
         .sidebar-room-card:hover {
-            transform: translateY(-3px);
+            transform: translateY(-5px) scale(1.02);
             border-color: #10b981;
-            box-shadow: 0 5px 15px rgba(16, 185, 129, 0.15);
+            box-shadow: 0 8px 25px rgba(16, 185, 129, 0.3);
+            background: rgba(30, 41, 59, 0.9);
         }
 
         .sidebar-room-card:hover::before {
@@ -339,12 +438,12 @@
 
         .sidebar-room-card.available {
             border-color: #10b981;
-            background: rgba(16, 185, 129, 0.05);
+            background: rgba(16, 185, 129, 0.1);
         }
 
         .sidebar-room-card.unavailable {
             border-color: #ef4444;
-            background: rgba(239, 68, 68, 0.05);
+            background: rgba(239, 68, 68, 0.1);
         }
 
         .sidebar-room-card.unavailable::before {
@@ -355,11 +454,11 @@
             font-size: 1.2em;
             font-weight: 700;
             margin-bottom: 6px;
-            color: #059669;
+            color: #f1f5f9;
         }
 
         .sidebar-room-card.unavailable .sidebar-room-name {
-            color: #ef4444;
+            color: #fca5a5;
         }
 
         .sidebar-room-status {
@@ -380,7 +479,7 @@
         .sidebar-room-booking-info {
             margin-top: 8px;
             font-size: 0.8em;
-            color: #64748b;
+            color: #94a3b8;
         }
 
         .rooms-grid {
@@ -392,17 +491,42 @@
         }
 
         .room-card {
-            background: rgba(255, 255, 255, 0.95);
-            border: 1px solid rgba(16, 185, 129, 0.2);
+            background: rgba(30, 41, 59, 0.6);
+            border: 2px solid rgba(148, 163, 184, 0.2);
             border-radius: 16px;
             padding: 30px;
             cursor: pointer;
-            transition: all 0.3s ease;
+            transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             position: relative;
             overflow: hidden;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
             width: 100%;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            transform-origin: center;
+            z-index: 1;
+            animation: slideUp 0.6s ease-out backwards;
         }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .room-card:nth-child(1) { animation-delay: 0.1s; }
+        .room-card:nth-child(2) { animation-delay: 0.2s; }
+        .room-card:nth-child(3) { animation-delay: 0.3s; }
+        .room-card:nth-child(4) { animation-delay: 0.4s; }
+        .room-card:nth-child(5) { animation-delay: 0.5s; }
+        .room-card:nth-child(6) { animation-delay: 0.6s; }
+        .room-card:nth-child(7) { animation-delay: 0.7s; }
 
         .room-card::before {
             content: '';
@@ -411,27 +535,144 @@
             left: 0;
             width: 100%;
             height: 4px;
-            background: linear-gradient(90deg, #10b981 0%, #34d399 100%);
+            background: linear-gradient(90deg, #10b981 0%, #34d399 50%, #6ee7b7 100%);
             transform: scaleX(0);
-            transition: transform 0.3s ease;
+            transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            transform-origin: left;
         }
 
-        .room-card:hover {
-            transform: translateY(-5px);
-            border-color: #10b981;
-            box-shadow: 0 10px 30px rgba(16, 185, 129, 0.15);
-            background: rgba(255, 255, 255, 1);
-        }
+        /* Desktop hover effect */
+        @media (min-width: 769px) {
+            .room-card:hover {
+                transform: scale(1.08) translateY(-10px);
+                border-color: #10b981;
+                box-shadow: 0 20px 50px rgba(16, 185, 129, 0.35);
+                background: rgba(30, 41, 59, 0.85);
+                z-index: 10;
+            }
 
-        .room-card:hover::before {
-            transform: scaleX(1);
+            .room-card:hover::before {
+                transform: scaleX(1);
+            }
+
+            .room-card:hover .room-name {
+                transform: translateY(-3px);
+                text-shadow: 0 0 20px rgba(16, 185, 129, 0.4);
+            }
+
+            .room-card:hover .room-action {
+                background: linear-gradient(135deg, rgba(16, 185, 129, 0.25), rgba(52, 211, 153, 0.15));
+                transform: translateX(8px) scale(1.05);
+                color: #6ee7b7;
+            }
         }
 
         .room-name {
             font-size: 1.8em;
             font-weight: 700;
-            margin-bottom: 10px;
-            color: #059669;
+            color: #f1f5f9;
+            text-align: center;
+            margin-bottom: 8px;
+            transition: transform 0.3s ease;
+        }
+
+        .room-description {
+            font-size: 0.95em;
+            color: #94a3b8;
+            text-align: center;
+            margin-bottom: 15px;
+        }
+
+        .room-info {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .room-capacity {
+            font-size: 0.9em;
+            color: #cbd5e1;
+            background: rgba(16, 185, 129, 0.2);
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-weight: 500;
+        }
+
+        .room-status-live {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 10px 16px;
+            background: rgba(16, 185, 129, 0.15);
+            border-radius: 10px;
+            margin-bottom: 15px;
+        }
+
+        .room-status-live.available {
+            background: rgba(16, 185, 129, 0.2);
+        }
+
+        .room-status-live.busy {
+            background: rgba(239, 68, 68, 0.2);
+        }
+
+        .status-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: #64748b;
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        .room-status-live.available .status-dot {
+            background: #10b981;
+        }
+
+        .room-status-live.busy .status-dot {
+            background: #ef4444;
+        }
+
+        @keyframes pulse {
+
+            0%,
+            100% {
+                opacity: 1;
+                transform: scale(1);
+            }
+
+            50% {
+                opacity: 0.7;
+                transform: scale(1.1);
+            }
+        }
+
+        .status-text {
+            font-size: 0.9em;
+            font-weight: 600;
+            color: #cbd5e1;
+        }
+
+        .room-status-live.available .status-text {
+            color: #34d399;
+        }
+
+        .room-status-live.busy .status-text {
+            color: #fca5a5;
+        }
+
+        .room-action {
+            text-align: center;
+            font-size: 1em;
+            font-weight: 600;
+            color: #34d399;
+            padding: 10px;
+            background: rgba(16, 185, 129, 0.12);
+            border-radius: 8px;
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            border: 1px solid rgba(16, 185, 129, 0.2);
         }
 
         .room-status {
@@ -444,14 +685,41 @@
             color: #10b981;
         }
 
+        /* Mobile scroll effect */
+        @media (max-width: 768px) {
+            .room-card.focused {
+                transform: scale(1.05);
+                box-shadow: 0 15px 40px rgba(16, 185, 129, 0.3);
+                z-index: 10;
+                border-color: #10b981;
+            }
+
+            .room-card.focused::before {
+                transform: scaleX(1);
+            }
+
+            .room-card.dimmed {
+                transform: scale(0.95);
+                opacity: 0.7;
+                filter: grayscale(20%);
+            }
+        }
+
         .schedule-view {
             display: none;
             animation: fadeIn 0.5s ease;
         }
 
         @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
         .back-button {
@@ -459,38 +727,60 @@
             align-items: center;
             gap: 8px;
             padding: 12px 24px;
-            background: rgba(255, 255, 255, 0.95);
-            border: 1px solid rgba(16, 185, 129, 0.3);
+            background: rgba(30, 41, 59, 0.6);
+            border: 2px solid rgba(16, 185, 129, 0.3);
             border-radius: 10px;
-            color: #059669;
+            color: #34d399;
             cursor: pointer;
             font-size: 1em;
             font-weight: 600;
-            transition: all 0.3s ease;
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             margin-bottom: 30px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            animation: slideInLeft 0.5s ease-out;
+        }
+
+        @keyframes slideInLeft {
+            from {
+                opacity: 0;
+                transform: translateX(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
         }
 
         .back-button:hover {
-            background: rgba(16, 185, 129, 0.05);
+            background: rgba(30, 41, 59, 0.85);
             border-color: #10b981;
-            transform: translateX(-5px);
+            transform: translateX(-8px) scale(1.05);
+            box-shadow: 0 8px 25px rgba(16, 185, 129, 0.3);
+        }
+
+        .back-button:active {
+            transform: translateX(-4px) scale(0.98);
         }
 
         .schedule-header {
-            background: rgba(255, 255, 255, 0.95);
-            border: 1px solid rgba(16, 185, 129, 0.2);
+            background: linear-gradient(135deg, rgba(30, 41, 59, 0.7) 0%, rgba(16, 185, 129, 0.1) 100%);
+            border: 2px solid rgba(16, 185, 129, 0.3);
             border-radius: 16px;
             padding: 30px;
             margin-bottom: 30px;
             text-align: center;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            box-shadow: 0 8px 25px rgba(16, 185, 129, 0.15);
+            animation: slideDown 0.6s ease-out;
         }
 
         .schedule-header h2 {
             font-size: 2em;
-            color: #059669;
+            color: #34d399;
             margin-bottom: 10px;
+            background: linear-gradient(135deg, #10b981 0%, #34d399 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
         }
 
         .schedule-list {
@@ -506,23 +796,28 @@
         .schedule-date-header {
             font-size: 1.3em;
             font-weight: 600;
-            color: #059669;
+            color: #34d399;
             margin-bottom: 15px;
             padding-bottom: 8px;
-            border-bottom: 2px solid rgba(16, 185, 129, 0.2);
+            border-bottom: 2px solid rgba(16, 185, 129, 0.3);
         }
 
         .schedule-item {
-            background: rgba(255, 255, 255, 0.95);
-            border: 1px solid rgba(16, 185, 129, 0.2);
+            background: rgba(30, 41, 59, 0.6);
+            border: 2px solid rgba(148, 163, 184, 0.2);
             border-radius: 12px;
             padding: 20px;
-            transition: all 0.3s ease;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             position: relative;
             overflow: hidden;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
             margin-bottom: 15px;
+            animation: slideUp 0.5s ease-out backwards;
         }
+
+        .schedule-date-group .schedule-item:nth-child(2) { animation-delay: 0.1s; }
+        .schedule-date-group .schedule-item:nth-child(3) { animation-delay: 0.2s; }
+        .schedule-date-group .schedule-item:nth-child(4) { animation-delay: 0.3s; }
 
         .schedule-item::before {
             content: '';
@@ -531,19 +826,20 @@
             top: 0;
             width: 4px;
             height: 100%;
-            background: #10b981;
+            background: linear-gradient(180deg, #10b981 0%, #34d399 100%);
         }
 
         .schedule-item:hover {
             border-color: #10b981;
-            transform: translateX(5px);
-            box-shadow: 0 5px 20px rgba(16, 185, 129, 0.15);
+            transform: translateX(8px) scale(1.02);
+            box-shadow: 0 8px 25px rgba(16, 185, 129, 0.35);
+            background: rgba(30, 41, 59, 0.85);
         }
 
         .schedule-time {
             font-size: 1.3em;
             font-weight: 700;
-            color: #10b981;
+            color: #34d399;
             margin-bottom: 8px;
         }
 
@@ -551,7 +847,7 @@
             font-size: 1.1em;
             font-weight: 600;
             margin-bottom: 8px;
-            color: #1e293b;
+            color: #f1f5f9;
         }
 
         .schedule-meta {
@@ -559,7 +855,7 @@
             gap: 20px;
             flex-wrap: wrap;
             font-size: 0.95em;
-            color: #64748b;
+            color: #94a3b8;
         }
 
         .schedule-meta span {
@@ -571,12 +867,12 @@
         .loading {
             text-align: center;
             padding: 60px 20px;
-            color: #64748b;
+            color: #94a3b8;
             font-size: 1.1em;
         }
 
         .spinner {
-            border: 3px solid rgba(16, 185, 129, 0.1);
+            border: 3px solid rgba(16, 185, 129, 0.2);
             border-top: 3px solid #10b981;
             border-radius: 50%;
             width: 40px;
@@ -586,8 +882,13 @@
         }
 
         @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
         }
 
         .error {
@@ -595,14 +896,14 @@
             border: 1px solid rgba(239, 68, 68, 0.3);
             border-radius: 12px;
             padding: 20px;
-            color: #ef4444;
+            color: #fca5a5;
             text-align: center;
         }
 
         .empty-state {
             text-align: center;
             padding: 60px 20px;
-            color: #64748b;
+            color: #94a3b8;
         }
 
         .empty-state-icon {
@@ -611,15 +912,654 @@
             opacity: 0.5;
         }
 
-        /* Footer Styles */
+        /* Hero Section */
+        .hero-section {
+            background: linear-gradient(135deg, rgba(30, 41, 59, 0.5) 0%, rgba(16, 185, 129, 0.08) 100%);
+            border-radius: 20px;
+            padding: 50px 40px;
+            margin-bottom: 40px;
+            box-shadow: 0 8px 32px rgba(16, 185, 129, 0.2);
+            position: relative;
+            overflow: hidden;
+            border: 2px solid rgba(16, 185, 129, 0.2);
+            animation: slideUp 0.7s ease-out;
+        }
+
+        .hero-section::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -10%;
+            width: 400px;
+            height: 400px;
+            background: radial-gradient(circle, rgba(16, 185, 129, 0.1) 0%, transparent 70%);
+            border-radius: 50%;
+            animation: float 6s ease-in-out infinite;
+        }
+
+        .hero-section::after {
+            content: '';
+            position: absolute;
+            bottom: -30%;
+            left: -5%;
+            width: 350px;
+            height: 350px;
+            background: radial-gradient(circle, rgba(59, 130, 246, 0.05) 0%, transparent 70%);
+            border-radius: 50%;
+            animation: float 8s ease-in-out infinite reverse;
+        }
+
+        @keyframes float {
+
+            0%,
+            100% {
+                transform: translateY(0) rotate(0deg);
+            }
+
+            50% {
+                transform: translateY(-20px) rotate(5deg);
+            }
+        }
+
+        .hero-content {
+            text-align: center;
+            margin-bottom: 35px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .hero-title {
+            font-size: 2.2em;
+            font-weight: 700;
+            color: #f1f5f9;
+            margin-bottom: 12px;
+            text-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+            animation: fadeInUp 0.8s ease-out 0.2s backwards;
+        }
+
+        .hero-subtitle {
+            font-size: 1.2em;
+            color: #cbd5e1;
+            font-weight: 400;
+            animation: fadeInUp 0.8s ease-out 0.3s backwards;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Mobile optimized stats grid */
+        @media (max-width: 768px) {
+            .hero-section {
+                padding: 30px 15px;
+            }
+
+            .hero-title {
+                font-size: 1.8em;
+            }
+
+            .hero-subtitle {
+                font-size: 1em;
+            }
+
+            .stats-grid {
+                grid-template-columns: repeat(3, 1fr);
+                gap: 10px;
+                padding: 0 5px;
+                width: calc(100% + 10px);
+                margin-left: -5px;
+                margin-right: -5px;
+            }
+
+            .stat-card {
+                padding: 20px 12px;
+                min-height: 120px;
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                align-items: center;
+                border-radius: 12px;
+            }
+        }
+
+        /* Extra small mobile optimization */
+        @media (max-width: 480px) {
+            .stats-grid {
+                gap: 8px;
+                padding: 0 3px;
+                width: calc(100% + 6px);
+                margin-left: -3px;
+                margin-right: -3px;
+            }
+
+            .stat-card {
+                padding: 15px 8px;
+                min-height: 100px;
+            }
+        }
+
+        .stat-card {
+            background: rgba(30, 41, 59, 0.6);
+            border: 2px solid rgba(16, 185, 129, 0.2);
+            border-radius: 16px;
+            padding: 25px;
+            text-align: center;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+            animation: slideUp 0.6s ease-out backwards;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -50%;
+            width: 200px;
+            height: 200px;
+            background: radial-gradient(circle, rgba(16, 185, 129, 0.1) 0%, transparent 70%);
+            transition: all 0.4s ease;
+        }
+
+        .stat-card:nth-child(1) { animation-delay: 0.5s; }
+        .stat-card:nth-child(2) { animation-delay: 0.6s; }
+        .stat-card:nth-child(3) { animation-delay: 0.7s; }
+
+        .stat-card:hover {
+            transform: translateY(-8px) scale(1.05);
+            box-shadow: 0 12px 35px rgba(16, 185, 129, 0.3);
+            background: rgba(30, 41, 59, 0.8);
+            border-color: #10b981;
+        }
+
+        .stat-card:hover::before {
+            transform: scale(2);
+        }
+
+        /* Professional icon styles */
+        .stat-icon {
+            width: 48px;
+            height: 48px;
+            margin: 0 auto 15px;
+            position: relative;
+        }
+
+        .stat-icon.building::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, #10b981 0%, #34d399 100%);
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(16, 185, 129, 0.3);
+        }
+
+        .stat-icon.building::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 24px;
+            height: 24px;
+            background: #1e293b;
+            clip-path: polygon(20% 0%, 80% 0%, 100% 50%, 80% 100%, 20% 100%, 0% 50%);
+        }
+
+        .stat-icon.check::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 32px;
+            height: 32px;
+            background: linear-gradient(135deg, #10b981 0%, #34d399 100%);
+            border-radius: 50%;
+            box-shadow: 0 4px 10px rgba(16, 185, 129, 0.3);
+        }
+
+        .stat-icon.check::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-40%, -50%) rotate(45deg);
+            width: 16px;
+            height: 8px;
+            background: #1e293b;
+        }
+
+        .stat-icon.calendar::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 36px;
+            height: 36px;
+            background: linear-gradient(135deg, #10b981 0%, #34d399 100%);
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(16, 185, 129, 0.3);
+        }
+
+        .stat-icon.calendar::after {
+            content: '';
+            position: absolute;
+            top: 6px;
+            left: 6px;
+            right: 6px;
+            height: 8px;
+            background: #1e293b;
+            border-radius: 2px;
+        }
+
+        .stat-icon.calendar::before {
+            content: '';
+            position: absolute;
+            bottom: 6px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 24px;
+            height: 2px;
+            background: #1e293b;
+            border-radius: 1px;
+        }
+
+        .stat-value {
+            font-size: 2.5em;
+            font-weight: 700;
+            color: #34d399;
+            margin-bottom: 5px;
+            text-shadow: 0 0 20px rgba(16, 185, 129, 0.2);
+        }
+
+        .stat-label {
+            font-size: 0.95em;
+            color: #cbd5e1;
+            font-weight: 500;
+        }
+
+        .stat-card {
+            cursor: pointer;
+        }
+
+        /* Modal Styles */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 3000;
+            animation: fadeIn 0.3s ease;
+            backdrop-filter: blur(5px);
+        }
+
+        .modal-overlay.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: linear-gradient(135deg, rgba(30, 41, 59, 0.98) 0%, rgba(16, 185, 129, 0.08) 100%);
+            border: 2px solid rgba(16, 185, 129, 0.3);
+            border-radius: 20px;
+            padding: 30px;
+            max-width: 600px;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+            animation: slideUp 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            position: relative;
+            z-index: 3001;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid rgba(16, 185, 129, 0.2);
+        }
+
+        .modal-header h2 {
+            font-size: 1.8em;
+            color: #34d399;
+            margin: 0;
+            background: linear-gradient(135deg, #10b981 0%, #34d399 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .modal-close {
+            background: rgba(255, 255, 255, 0.1);
+            border: none;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            color: #f1f5f9;
+            font-size: 24px;
+        }
+
+        .modal-close:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: rotate(90deg) scale(1.1);
+        }
+
+        .modal-body {
+            color: #cbd5e1;
+        }
+
+        .modal-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .modal-item {
+            background: rgba(30, 41, 59, 0.6);
+            border: 1px solid rgba(16, 185, 129, 0.2);
+            border-radius: 12px;
+            padding: 15px;
+            transition: all 0.3s ease;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .modal-item:hover {
+            background: rgba(30, 41, 59, 0.8);
+            border-color: #10b981;
+            transform: translateX(5px);
+        }
+
+        .modal-item-text {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+
+        .modal-item-name {
+            font-weight: 600;
+            color: #f1f5f9;
+        }
+
+        .modal-item-info {
+            font-size: 0.9em;
+            color: #94a3b8;
+        }
+
+        .modal-item-badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 0.8em;
+            font-weight: 600;
+            background: rgba(16, 185, 129, 0.2);
+            color: #10b981;
+        }
+
+        .modal-item-badge.available {
+            background: rgba(16, 185, 129, 0.2);
+            color: #10b981;
+        }
+
+        .modal-item-badge.busy {
+            background: rgba(239, 68, 68, 0.2);
+            color: #ef4444;
+        }
+
+        .modal-empty {
+            text-align: center;
+            padding: 40px 20px;
+            color: #94a3b8;
+        }
+
+        .modal-empty-icon {
+            font-size: 3em;
+            margin-bottom: 15px;
+            opacity: 0.5;
+        }
+
+        /* Booking Form Styles */
+        .booking-form {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .booking-form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .booking-form-group label {
+            font-size: 0.95em;
+            font-weight: 600;
+            color: #cbd5e1;
+        }
+
+        .booking-form-group input,
+        .booking-form-group textarea,
+        .booking-form-group select {
+            padding: 12px 15px;
+            border: 1px solid rgba(16, 185, 129, 0.2);
+            border-radius: 8px;
+            background: rgba(30, 41, 59, 0.5);
+            color: #f1f5f9;
+            font-size: 0.95em;
+            font-family: inherit;
+            transition: all 0.3s ease;
+        }
+
+        .booking-form-group input:focus,
+        .booking-form-group textarea:focus,
+        .booking-form-group select:focus {
+            outline: none;
+            border-color: #10b981;
+            box-shadow: 0 0 0 4px rgba(16, 185, 129, 0.25);
+            background: rgba(30, 41, 59, 0.8);
+        }
+
+        .booking-form-group textarea {
+            resize: vertical;
+            min-height: 80px;
+        }
+
+        .booking-form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+
+        @media (max-width: 600px) {
+            .booking-form-row {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .availability-status {
+            padding: 12px 15px;
+            border-radius: 8px;
+            font-size: 0.95em;
+            font-weight: 600;
+            display: none;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .availability-status.show {
+            display: flex;
+        }
+
+        .availability-status.available {
+            background: rgba(16, 185, 129, 0.2);
+            color: #10b981;
+            border: 1px solid rgba(16, 185, 129, 0.3);
+        }
+
+        .availability-status.unavailable {
+            background: rgba(239, 68, 68, 0.2);
+            color: #ef4444;
+            border: 1px solid rgba(239, 68, 68, 0.3);
+        }
+
+        .availability-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            display: inline-block;
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        .availability-status.available .availability-dot {
+            background: #10b981;
+        }
+
+        .availability-status.unavailable .availability-dot {
+            background: #ef4444;
+            animation: none;
+        }
+
+        .booking-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .booking-btn {
+            flex: 1;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 8px;
+            font-size: 0.95em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .booking-btn-submit {
+            background: linear-gradient(135deg, #059669 0%, #10b981 50%, #34d399 100%);
+            color: white;
+            box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3);
+        }
+
+        .booking-btn-submit:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(16, 185, 129, 0.4);
+        }
+
+        .booking-btn-cancel {
+            background: rgba(30, 41, 59, 0.6);
+            color: #94a3b8;
+            border: 1px solid rgba(148, 163, 184, 0.2);
+        }
+
+        .booking-btn-cancel:hover {
+            background: rgba(30, 41, 59, 0.8);
+            border-color: #94a3b8;
+        }
+
+        .booking-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none !important;
+        }
+
+        .booking-success {
+            text-align: center;
+            padding: 30px 20px;
+            color: #10b981;
+        }
+
+        .booking-success-icon {
+            font-size: 3em;
+            margin-bottom: 15px;
+        }
+
+        .booking-success h3 {
+            margin-bottom: 10px;
+            color: #f1f5f9;
+        }
+
+        .booking-error {
+            background: rgba(239, 68, 68, 0.2);
+            border: 1px solid rgba(239, 68, 68, 0.3);
+            color: #fca5a5;
+            padding: 12px 15px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+        }
+
+        .booking-hint {
+            font-size: 0.85em;
+            color: #64748b;
+            margin-top: 5px;
+        }
+
+        /* Section Header */
+        .section-header {
+            margin-bottom: 30px;
+            text-align: center;
+        }
+
+        .section-title {
+            font-size: 1.8em;
+            font-weight: 700;
+            color: #34d399;
+            margin-bottom: 8px;
+            background: linear-gradient(135deg, #10b981 0%, #34d399 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .section-subtitle {
+            font-size: 1.1em;
+            color: #94a3b8;
+        }
+
         footer {
-            background: rgba(255, 255, 255, 0.9);
-            border-top: 1px solid rgba(16, 185, 129, 0.2);
+            background: linear-gradient(135deg, rgba(15, 23, 42, 0.98) 0%, rgba(30, 41, 59, 0.95) 100%);
+            border-top: 2px solid rgba(16, 185, 129, 0.2);
             padding: 30px 20px;
             margin-top: 40px;
-            backdrop-filter: blur(10px);
-            box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.05);
+            backdrop-filter: blur(20px);
+            box-shadow: 0 -8px 32px rgba(0, 0, 0, 0.3);
             flex-shrink: 0;
+            animation: slideUp 0.6s ease-out;
         }
 
         .footer-container {
@@ -634,7 +1574,7 @@
         .footer-creator {
             font-size: 1.1em;
             font-weight: 600;
-            color: #059669;
+            color: #94a3b8;
             margin-bottom: 5px;
         }
 
@@ -648,15 +1588,31 @@
             display: flex;
             align-items: center;
             gap: 8px;
-            color: #64748b;
+            color: #94a3b8;
             text-decoration: none;
-            transition: all 0.3s ease;
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             font-size: 0.95em;
+            position: relative;
+        }
+
+        .footer-link::after {
+            content: '';
+            position: absolute;
+            bottom: -4px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: linear-gradient(90deg, #10b981 0%, #34d399 100%);
+            transition: width 0.3s ease;
         }
 
         .footer-link:hover {
-            color: #10b981;
-            transform: translateY(-2px);
+            color: #34d399;
+            transform: translateY(-3px);
+        }
+
+        .footer-link:hover::after {
+            width: 100%;
         }
 
         .footer-link svg {
@@ -727,6 +1683,7 @@
         }
     </style>
 </head>
+
 <body>
     <header>
         <div class="header-container">
@@ -745,34 +1702,112 @@
 
     <div class="content-wrapper">
         <div id="roomsView" class="rooms-view">
+            <!-- Hero Section -->
+            <div class="hero-section">
+                <div class="hero-content">
+                    <h2 class="hero-title">Selamat Datang di Sistem Booking Ruangan</h2>
+                    <p class="hero-subtitle">Kelola dan pesan ruangan meeting dengan mudah dan efisien</p>
+                </div>
+                <div class="stats-grid">
+                    <div class="stat-card" onclick="showStatModal('total')">
+                        <div class="stat-icon building"></div>
+                        <div class="stat-value" id="totalRooms">7</div>
+                        <div class="stat-label">Total Ruangan</div>
+                    </div>
+                    <div class="stat-card" onclick="showStatModal('available')">
+                        <div class="stat-icon check"></div>
+                        <div class="stat-value" id="availableRooms">-</div>
+                        <div class="stat-label">Tersedia Sekarang</div>
+                    </div>
+                    <div class="stat-card" onclick="showStatModal('booking')">
+                        <div class="stat-icon calendar"></div>
+                        <div class="stat-value" id="todayBookings">-</div>
+                        <div class="stat-label">Booking Hari Ini</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="section-header">
+                <h3 class="section-title">Pilih Ruangan</h3>
+            </div>
+
             <div class="rooms-grid">
-                <div class="room-card" onclick="showSchedule('Ningrat')">
+                <div class="room-card" onclick="showSchedule('Ningrat')" data-room="Ningrat">
                     <div class="room-name">Ningrat</div>
-                    <div class="room-status">Lihat Jadwal</div>
+                    <div class="room-info">
+                        <span class="room-capacity">👥 8-10 orang</span>
+                    </div>
+                    <div class="room-status-live" id="status-Ningrat">
+                        <span class="status-dot"></span>
+                        <span class="status-text">Memuat...</span>
+                    </div>
+                    <div class="room-action" onclick="event.stopPropagation(); showBookingModal('Ningrat')">📅 Pesan Ruangan</div>
                 </div>
-                <div class="room-card" onclick="showSchedule('Juragan')">
+                <div class="room-card" onclick="showSchedule('Juragan')" data-room="Juragan">
                     <div class="room-name">Juragan</div>
-                    <div class="room-status">Lihat Jadwal</div>
+                    <div class="room-info">
+                        <span class="room-capacity">👥 6-8 orang</span>
+                    </div>
+                    <div class="room-status-live" id="status-Juragan">
+                        <span class="status-dot"></span>
+                        <span class="status-text">Memuat...</span>
+                    </div>
+                    <div class="room-action" onclick="event.stopPropagation(); showBookingModal('Juragan')">📅 Pesan Ruangan</div>
                 </div>
-                <div class="room-card" onclick="showSchedule('Risk Taker')">
+                <div class="room-card" onclick="showSchedule('Risk Taker')" data-room="Risk Taker">
                     <div class="room-name">Risk Taker</div>
-                    <div class="room-status">Lihat Jadwal</div>
+                    <div class="room-info">
+                        <span class="room-capacity">👥 4-6 orang</span>
+                    </div>
+                    <div class="room-status-live" id="status-Risk Taker">
+                        <span class="status-dot"></span>
+                        <span class="status-text">Memuat...</span>
+                    </div>
+                    <div class="room-action" onclick="event.stopPropagation(); showBookingModal('Risk Taker')">📅 Pesan Ruangan</div>
                 </div>
-                <div class="room-card" onclick="showSchedule('Gym')">
+                <div class="room-card" onclick="showSchedule('Gym')" data-room="Gym">
                     <div class="room-name">Gym</div>
-                    <div class="room-status">Lihat Jadwal</div>
+                    <div class="room-info">
+                        <span class="room-capacity">👥 10-15 orang</span>
+                    </div>
+                    <div class="room-status-live" id="status-Gym">
+                        <span class="status-dot"></span>
+                        <span class="status-text">Memuat...</span>
+                    </div>
+                    <div class="room-action" onclick="event.stopPropagation(); showBookingModal('Gym')">📅 Pesan Ruangan</div>
                 </div>
-                <div class="room-card" onclick="showSchedule('Pak Aldi')">
+                <div class="room-card" onclick="showSchedule('Pak Aldi')" data-room="Pak Aldi">
                     <div class="room-name">Pak Aldi</div>
-                    <div class="room-status">Lihat Jadwal</div>
+                    <div class="room-info">
+                        <span class="room-capacity">👥 4-6 orang</span>
+                    </div>
+                    <div class="room-status-live" id="status-Pak Aldi">
+                        <span class="status-dot"></span>
+                        <span class="status-text">Memuat...</span>
+                    </div>
+                    <div class="room-action" onclick="event.stopPropagation(); showBookingModal('Pak Aldi')">📅 Pesan Ruangan</div>
                 </div>
-                <div class="room-card" onclick="showSchedule('Bangor Outlet')">
+                <div class="room-card" onclick="showSchedule('Bangor Outlet')" data-room="Bangor Outlet">
                     <div class="room-name">Bangor Outlet</div>
-                    <div class="room-status">Lihat Jadwal</div>
+                    <div class="room-info">
+                        <span class="room-capacity">👥 5-8 orang</span>
+                    </div>
+                    <div class="room-status-live" id="status-Bangor Outlet">
+                        <span class="status-dot"></span>
+                        <span class="status-text">Memuat...</span>
+                    </div>
+                    <div class="room-action" onclick="event.stopPropagation(); showBookingModal('Bangor Outlet')">📅 Pesan Ruangan</div>
                 </div>
-                <div class="room-card" onclick="showSchedule('Pizza Ranjang Outlet')">
+                <div class="room-card" onclick="showSchedule('Pizza Ranjang Outlet')" data-room="Pizza Ranjang Outlet">
                     <div class="room-name">Pizza Ranjang Outlet</div>
-                    <div class="room-status">Lihat Jadwal</div>
+                    <div class="room-info">
+                        <span class="room-capacity">👥 5-8 orang</span>
+                    </div>
+                    <div class="room-status-live" id="status-Pizza Ranjang Outlet">
+                        <span class="status-dot"></span>
+                        <span class="status-text">Memuat...</span>
+                    </div>
+                    <div class="room-action" onclick="event.stopPropagation(); showBookingModal('Pizza Ranjang Outlet')">📅 Pesan Ruangan</div>
                 </div>
             </div>
         </div>
@@ -798,7 +1833,8 @@
     <div class="availability-fab" onclick="toggleSidebar()">
         <span class="availability-fab-text">Cek Ketersediaan Ruangan</span>
         <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+            <path
+                d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z" />
         </svg>
     </div>
 
@@ -811,7 +1847,8 @@
             <h2>Cek Ketersediaan Ruangan</h2>
             <button class="close-sidebar" onclick="closeSidebar()">
                 <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/>
+                    <path
+                        d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z" />
                 </svg>
             </button>
         </div>
@@ -837,6 +1874,119 @@
         </div>
     </div>
 
+    <!-- Stats Modal -->
+    <div class="modal-overlay" id="statsModal" onclick="closeStatsModal(event)">
+        <div class="modal-content" onclick="event.stopPropagation()">
+            <div class="modal-header">
+                <h2 id="modalTitle">-</h2>
+                <button class="modal-close" onclick="closeStatsModal()">✕</button>
+            </div>
+            <div class="modal-body">
+                <div id="modalContent" class="modal-list"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Booking Modal -->
+    <div class="modal-overlay" id="bookingModal" onclick="closeBookingModal(event)">
+        <div class="modal-content" onclick="event.stopPropagation()">
+            <div class="modal-header">
+                <h2 id="bookingModalTitle">Pesan Ruangan</h2>
+                <button class="modal-close" onclick="closeBookingModal()">✕</button>
+            </div>
+            <div class="modal-body">
+                <div id="bookingFormContent">
+                    <form class="booking-form" onsubmit="submitBooking(event)">
+                        <div class="booking-form-group">
+                            <label for="bookingRoom">Ruangan</label>
+                            <input type="text" id="bookingRoom" readonly>
+                        </div>
+
+                        <div class="booking-form-group">
+                            <label for="bookingName">Nama Lengkap *</label>
+                            <input type="text" id="bookingName" placeholder="Masukkan nama Anda" required>
+                        </div>
+
+                        <div class="booking-form-group">
+                            <label for="bookingEmail">Email *</label>
+                            <input type="email" id="bookingEmail" placeholder="email@example.com" required>
+                        </div>
+
+                        <div class="booking-form-row">
+                            <div class="booking-form-group">
+                                <label for="bookingDate">Tanggal *</label>
+                                <input type="date" id="bookingDate" required onchange="checkBookingAvailability()">
+                            </div>
+                            <div class="booking-form-group">
+                                <label for="bookingPeople">Jumlah Orang *</label>
+                                <input type="number" id="bookingPeople" placeholder="Berapa orang?" min="1" required>
+                            </div>
+                        </div>
+
+                        <div class="booking-form-row">
+                            <div class="booking-form-group">
+                                <label for="bookingStartTime">Jam Mulai *</label>
+                                <input type="time" id="bookingStartTime" required onchange="checkBookingAvailability()">
+                                <div class="booking-hint">Format 24 jam (00:00 - 23:59)</div>
+                            </div>
+                            <div class="booking-form-group">
+                                <label for="bookingEndTime">Jam Selesai *</label>
+                                <input type="time" id="bookingEndTime" required onchange="checkBookingAvailability()">
+                            </div>
+                        </div>
+
+                        <div class="booking-form-group">
+                            <label for="bookingTitle">Judul/Topik Meeting *</label>
+                            <input type="text" id="bookingTitle" placeholder="Judul meeting..." required>
+                        </div>
+
+                        <div class="booking-form-group">
+                            <label for="bookingNotes">Catatan Tambahan</label>
+                            <textarea id="bookingNotes" placeholder="Informasi tambahan (opsional)..."></textarea>
+                        </div>
+
+                        <div id="availabilityStatus" class="availability-status">
+                            <span class="availability-dot"></span>
+                            <span id="availabilityText">Memeriksa ketersediaan...</span>
+                        </div>
+
+                        <div id="bookingError" class="booking-error" style="display: none;"></div>
+
+                        <div class="booking-actions">
+                            <button type="submit" class="booking-btn booking-btn-submit" id="submitBtn">
+                                Kirim Permintaan Booking
+                            </button>
+                            <button type="button" class="booking-btn booking-btn-cancel" onclick="closeBookingModal()">
+                                Batal
+                            </button>
+                        </div>
+                    </form>
+                </div>
+
+                <div id="bookingSuccessContent" style="display: none;">
+                    <div class="booking-success">
+                        <div class="booking-success-icon">✅</div>
+                        <h3>Permintaan Booking Terkirim!</h3>
+                        <p>Data booking Anda telah berhasil dikirim.</p>
+                        <p style="font-size: 0.9em; margin-top: 15px; color: #94a3b8;">
+                            Detail booking Anda:
+                        </p>
+                        <div style="background: rgba(30, 41, 59, 0.6); border-radius: 8px; padding: 15px; margin-top: 12px; text-align: left; font-size: 0.9em;">
+                            <p><strong>Ruangan:</strong> <span id="successRoom"></span></p>
+                            <p><strong>Nama:</strong> <span id="successName"></span></p>
+                            <p><strong>Tanggal:</strong> <span id="successDate"></span></p>
+                            <p><strong>Jam:</strong> <span id="successTime"></span></p>
+                            <p><strong>Meeting:</strong> <span id="successTitle"></span></p>
+                        </div>
+                        <button class="booking-btn booking-btn-submit" onclick="closeBookingModal()" style="margin-top: 20px;">
+                            Tutup
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- Footer -->
     <footer>
         <div class="footer-container">
@@ -844,13 +1994,15 @@
             <div class="footer-links">
                 <a href="https://www.linkedin.com/in/endri-puta-bintang13" target="_blank" class="footer-link">
                     <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M19 3a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h14m-.5 15.5v-5.3a3.26 3.26 0 0 0-3.26-3.26c-.85 0-1.84.52-2.32 1.3v-1.11h-2.79v8.37h2.79v-4.93c0-.77.62-1.4 1.39-1.4a1.4 1.4 0 0 1 1.4 1.4v4.93h2.79M6.88 8.56a1.68 1.68 0 0 0 1.68-1.68c0-.93-.75-1.69-1.68-1.69a1.69 1.69 0 0 0-1.69 1.69c0 .93.76 1.68 1.68 1.68m1.39 9.94v-8.37H5.5v8.37h2.77z"/>
+                        <path
+                            d="M19 3a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h14m-.5 15.5v-5.3a3.26 3.26 0 0 0-3.26-3.26c-.85 0-1.84.52-2.32 1.3v-1.11h-2.79v8.37h2.79v-4.93c0-.77.62-1.4 1.39-1.4a1.4 1.4 0 0 1 1.4 1.4v4.93h2.79M6.88 8.56a1.68 1.68 0 0 0 1.68-1.68c0-.93-.75-1.69-1.68-1.69a1.69 1.69 0 0 0-1.69 1.69c0 .93.76 1.68 1.68 1.68m1.39 9.94v-8.37H5.5v8.37h2.77z" />
                     </svg>
                     LinkedIn
                 </a>
                 <a href="mailto:endribangor1@gmail.com" class="footer-link">
                     <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/>
+                        <path
+                            d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z" />
                     </svg>
                     Email
                 </a>
@@ -860,30 +2012,37 @@
     </footer>
 
     <script>
-        const CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTvvHewile8pFiTtk_E11rk27pUGrQUbVrWjwQi45K1VOZC0Kuk_0oKsnIbXGSmtDuinyhS0uOnJjkH/pub?gid=0&single=true&output=csv';
+        const CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTvvHewile8pFiTtk_E11rk27pUGrQUbVrWjwQi45K1VOZC0Kuk_0oKsnIbXGSmtDuinyhS0uOnJjkH/pub?output=csv';
 
         let currentData = [];
         let allRooms = ['Ningrat', 'Juragan', 'Risk Taker', 'Gym', 'Pak Aldi', 'Bangor Outlet', 'Pizza Ranjang Outlet'];
+        let scrollTimeout;
+        let isMobile = false;
+
+        // Check if device is mobile
+        function checkIsMobile() {
+            isMobile = window.innerWidth <= 768;
+        }
 
         // Update date and time
         function updateDateTime() {
             const now = new Date();
-            
-            const dateOptions = { 
-                weekday: 'long', 
-                year: 'numeric', 
-                month: 'long', 
-                day: 'numeric' 
+
+            const dateOptions = {
+                weekday: 'long',
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric'
             };
             const dateStr = now.toLocaleDateString('id-ID', dateOptions);
-            
-            const timeStr = now.toLocaleTimeString('id-ID', { 
-                hour: '2-digit', 
+
+            const timeStr = now.toLocaleTimeString('id-ID', {
+                hour: '2-digit',
                 minute: '2-digit',
                 second: '2-digit',
                 hour12: false
             });
-            
+
             document.getElementById('currentDate').textContent = dateStr;
             document.getElementById('currentTime').textContent = timeStr;
         }
@@ -894,7 +2053,7 @@
             const year = today.getFullYear();
             const month = String(today.getMonth() + 1).padStart(2, '0');
             const day = String(today.getDate()).padStart(2, '0');
-            
+
             document.getElementById('checkDate').value = `${year}-${month}-${day}`;
         }
 
@@ -906,6 +2065,12 @@
         function showRooms() {
             document.getElementById('roomsView').style.display = 'block';
             document.getElementById('scheduleView').style.display = 'none';
+            // Reset room cards when returning to rooms view
+            setTimeout(() => {
+                if (isMobile) {
+                    updateRoomCardsOnScroll();
+                }
+            }, 100);
         }
 
         function showSchedule(room) {
@@ -919,7 +2084,7 @@
         function toggleSidebar() {
             const sidebar = document.querySelector('.availability-sidebar');
             const overlay = document.querySelector('.sidebar-overlay');
-            
+
             sidebar.classList.toggle('active');
             overlay.classList.toggle('active');
         }
@@ -927,7 +2092,7 @@
         function closeSidebar() {
             const sidebar = document.querySelector('.availability-sidebar');
             const overlay = document.querySelector('.sidebar-overlay');
-            
+
             sidebar.classList.remove('active');
             overlay.classList.remove('active');
         }
@@ -935,7 +2100,7 @@
         function openSidebar() {
             const sidebar = document.querySelector('.availability-sidebar');
             const overlay = document.querySelector('.sidebar-overlay');
-            
+
             sidebar.classList.add('active');
             overlay.classList.add('active');
         }
@@ -946,7 +2111,7 @@
                 const values = [];
                 let current = '';
                 let inQuotes = false;
-                
+
                 for (let i = 0; i < line.length; i++) {
                     const char = line[i];
                     if (char === '"') {
@@ -966,10 +2131,10 @@
         function normalizeTime(timeStr) {
             // Normalize time string to ensure 24-hour format HH:MM
             if (!timeStr) return '';
-            
+
             // Remove any spaces and convert to uppercase
             timeStr = timeStr.trim().toUpperCase();
-            
+
             // If already in 24-hour format (HH:MM), return as is
             if (/^\d{1,2}:\d{2}$/.test(timeStr)) {
                 const [hours, minutes] = timeStr.split(':');
@@ -978,13 +2143,13 @@
                     return `${hourInt.toString().padStart(2, '0')}:${minutes}`;
                 }
             }
-            
+
             // Convert 12-hour format with AM/PM to 24-hour format
             const match = timeStr.match(/^(\d{1,2}):(\d{2})(AM|PM)?$/);
             if (match) {
                 let [, hours, minutes, period] = match;
                 let hourInt = parseInt(hours);
-                
+
                 if (period === 'PM' && hourInt !== 12) {
                     hourInt += 12;
                 } else if (period === 'AM' && hourInt === 12) {
@@ -997,22 +2162,22 @@
                     period = 'PM';
                     if (hourInt !== 12) hourInt += 12;
                 }
-                
+
                 if (hourInt >= 0 && hourInt <= 23) {
                     return `${hourInt.toString().padStart(2, '0')}:${minutes}`;
                 }
             }
-            
+
             return timeStr; // Return original if can't parse
         }
 
         // Function to parse date in DD-MM-YYYY format and convert to YYYY-MM-DD for comparison
         function parseDate(dateStr) {
             if (!dateStr) return '';
-            
+
             // Remove any spaces
             dateStr = dateStr.trim();
-            
+
             // Try to parse DD-MM-YYYY format
             const match = dateStr.match(/^(\d{1,2})-(\d{1,2})-(\d{4})$/);
             if (match) {
@@ -1020,12 +2185,12 @@
                 const dayNum = parseInt(day);
                 const monthNum = parseInt(month);
                 const yearNum = parseInt(year);
-                
+
                 // Validate date components
                 if (dayNum >= 1 && dayNum <= 31 && monthNum >= 1 && monthNum <= 12 && yearNum >= 2000 && yearNum <= 2100) {
                     // Create date object to validate
                     const testDate = new Date(yearNum, monthNum - 1, dayNum);
-                    
+
                     // Check if date is valid (e.g., not 31 February)
                     if (testDate.getFullYear() === yearNum && testDate.getMonth() === monthNum - 1 && testDate.getDate() === dayNum) {
                         // Return in YYYY-MM-DD format for consistent comparison
@@ -1033,7 +2198,7 @@
                     }
                 }
             }
-            
+
             // Try to parse DD/MM/YYYY format
             const slashMatch = dateStr.match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})$/);
             if (slashMatch) {
@@ -1041,12 +2206,12 @@
                 const dayNum = parseInt(day);
                 const monthNum = parseInt(month);
                 const yearNum = parseInt(year);
-                
+
                 // Validate date components
                 if (dayNum >= 1 && dayNum <= 31 && monthNum >= 1 && monthNum <= 12 && yearNum >= 2000 && yearNum <= 2100) {
                     // Create date object to validate
                     const testDate = new Date(yearNum, monthNum - 1, dayNum);
-                    
+
                     // Check if date is valid
                     if (testDate.getFullYear() === yearNum && testDate.getMonth() === monthNum - 1 && testDate.getDate() === dayNum) {
                         // Return in YYYY-MM-DD format for consistent comparison
@@ -1054,23 +2219,23 @@
                     }
                 }
             }
-            
+
             // If it's already in YYYY-MM-DD format, validate and return as is
             if (/^\d{4}-\d{1,2}-\d{1,2}$/.test(dateStr)) {
                 const [year, month, day] = dateStr.split('-');
                 const yearNum = parseInt(year);
                 const monthNum = parseInt(month);
                 const dayNum = parseInt(day);
-                
+
                 if (yearNum >= 2000 && yearNum <= 2100 && monthNum >= 1 && monthNum <= 12 && dayNum >= 1 && dayNum <= 31) {
                     const testDate = new Date(yearNum, monthNum - 1, dayNum);
-                    
+
                     if (testDate.getFullYear() === yearNum && testDate.getMonth() === monthNum - 1 && testDate.getDate() === dayNum) {
                         return dateStr;
                     }
                 }
             }
-            
+
             // Return empty string if can't parse or invalid
             return '';
         }
@@ -1078,25 +2243,25 @@
         // Function to format date for display
         function formatDateForDisplay(dateStr) {
             if (!dateStr) return '';
-            
+
             // Use original date string if it's already in a displayable format
             // Otherwise, try to parse and format it
             const normalizedDate = parseDate(dateStr);
-            
+
             if (!normalizedDate) {
                 // If parsing failed, return original string
                 return dateStr;
             }
-            
+
             // Create a Date object from normalized date
             const [year, month, day] = normalizedDate.split('-').map(Number);
             const dateObj = new Date(year, month - 1, day);
-            
+
             // Check if date is valid
             if (isNaN(dateObj.getTime())) {
                 return dateStr; // Return original if invalid
             }
-            
+
             // Format date for display
             return dateObj.toLocaleDateString('id-ID', {
                 weekday: 'long',
@@ -1109,64 +2274,64 @@
         // Function to check if a date is in the past
         function isDateInPast(dateStr) {
             if (!dateStr) return false;
-            
+
             const normalizedDate = parseDate(dateStr);
             if (!normalizedDate) return false;
-            
+
             const [year, month, day] = normalizedDate.split('-').map(Number);
             const bookingDate = new Date(year, month - 1, day);
-            
+
             // Check if date is valid
             if (isNaN(bookingDate.getTime())) {
                 return false;
             }
-            
+
             // Set time to end of day for comparison
             bookingDate.setHours(23, 59, 59, 999);
-            
+
             const today = new Date();
-            
+
             return bookingDate < today;
         }
 
         // Function to check if a time is in the past for today's date
         function isTimeInPast(dateStr, timeStr) {
             if (!dateStr || !timeStr) return false;
-            
+
             const normalizedDate = parseDate(dateStr);
             if (!normalizedDate) return false;
-            
+
             const [year, month, day] = normalizedDate.split('-').map(Number);
             const bookingDate = new Date(year, month - 1, day);
-            
+
             // Check if date is valid
             if (isNaN(bookingDate.getTime())) {
                 return false;
             }
-            
+
             const today = new Date();
-            
+
             // If booking date is not today, it's not in the past
             if (bookingDate.toDateString() !== today.toDateString()) {
                 return false;
             }
-            
+
             // Parse time
             const [hours, minutes] = timeStr.split(':').map(Number);
             if (isNaN(hours) || isNaN(minutes)) {
                 return false;
             }
-            
+
             const bookingTime = new Date();
             bookingTime.setHours(hours, minutes, 0, 0);
-            
+
             return bookingTime < today;
         }
 
         async function loadAllData() {
             try {
                 const response = await fetch(CSV_URL);
-                
+
                 if (!response.ok) {
                     throw new Error('Gagal mengambil data');
                 }
@@ -1200,7 +2365,7 @@
         async function checkAvailability() {
             const checkDate = document.getElementById('checkDate').value;
             const checkTime = document.getElementById('checkTime').value;
-            
+
             if (!checkDate || !checkTime) {
                 alert('Silakan pilih tanggal dan waktu terlebih dahulu');
                 return;
@@ -1209,21 +2374,21 @@
             const resultsContainer = document.getElementById('availabilityResults');
             const availableContainer = document.getElementById('availableRooms');
             const unavailableContainer = document.getElementById('unavailableRooms');
-            
+
             resultsContainer.classList.add('active');
             availableContainer.innerHTML = '<div class="loading"><div class="spinner"></div><p>Memeriksa ketersediaan...</p></div>';
             unavailableContainer.innerHTML = '';
 
             // Load all data
             const allData = await loadAllData();
-            
+
             // Check availability for each room
             const availableRooms = [];
             const unavailableRooms = [];
 
             allRooms.forEach(room => {
-                const roomBookings = allData.filter(booking => 
-                    booking.room === room && 
+                const roomBookings = allData.filter(booking =>
+                    booking.room === room &&
                     booking.date === checkDate
                 );
 
@@ -1233,7 +2398,7 @@
                 for (const booking of roomBookings) {
                     const bookingStart = booking.startTime;
                     const bookingEnd = booking.endTime;
-                    
+
                     // Check if the requested time conflicts with any booking
                     if (checkTime >= bookingStart && checkTime < bookingEnd) {
                         isAvailable = false;
@@ -1317,7 +2482,7 @@
 
             try {
                 const response = await fetch(CSV_URL);
-                
+
                 if (!response.ok) {
                     throw new Error('Gagal mengambil data');
                 }
@@ -1356,12 +2521,12 @@
                     if (isDateInPast(item.date)) {
                         return false;
                     }
-                    
+
                     // If date is today but time is in the past, exclude it
                     if (isTimeInPast(item.date, item.endTime)) {
                         return false;
                     }
-                    
+
                     return true;
                 });
 
@@ -1386,18 +2551,18 @@
                 });
 
                 let html = '<div class="schedule-list">';
-                
+
                 // Sort dates
                 const sortedDates = Object.keys(groupedByDate).sort();
-                
+
                 sortedDates.forEach(date => {
                     const formattedDate = formatDateForDisplay(date);
-                    
+
                     html += `
                         <div class="schedule-date-group">
                             <div class="schedule-date-header">${formattedDate}</div>
                     `;
-                    
+
                     groupedByDate[date].forEach(item => {
                         html += `
                             <div class="schedule-item">
@@ -1410,10 +2575,10 @@
                             </div>
                         `;
                     });
-                    
+
                     html += '</div>';
                 });
-                
+
                 html += '</div>';
 
                 content.innerHTML = html;
@@ -1429,6 +2594,527 @@
                 `;
             }
         }
+
+        // Update live room status and statistics
+        async function updateLiveStatus() {
+            try {
+                const allData = await loadAllData();
+                const now = new Date();
+                const today = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`;
+                const currentTime = `${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}`;
+
+                let availableCount = 0;
+                let todayBookingsCount = 0;
+
+                // Count today's bookings
+                todayBookingsCount = allData.filter(booking => booking.date === today).length;
+
+                // Check each room's status
+                allRooms.forEach(room => {
+                    const statusElement = document.getElementById(`status-${room}`);
+                    if (!statusElement) return;
+
+                    const roomBookings = allData.filter(booking =>
+                        booking.room === room &&
+                        booking.date === today
+                    );
+
+                    let isAvailable = true;
+                    let nextBooking = null;
+
+                    for (const booking of roomBookings) {
+                        const bookingStart = booking.startTime;
+                        const bookingEnd = booking.endTime;
+
+                        // Check if room is currently busy
+                        if (currentTime >= bookingStart && currentTime < bookingEnd) {
+                            isAvailable = false;
+                            statusElement.classList.remove('available');
+                            statusElement.classList.add('busy');
+                            statusElement.querySelector('.status-text').textContent = `Sedang Digunakan (${bookingEnd})`;
+                            break;
+                        }
+
+                        // Find next booking
+                        if (currentTime < bookingStart) {
+                            if (!nextBooking || bookingStart < nextBooking.startTime) {
+                                nextBooking = booking;
+                            }
+                        }
+                    }
+
+                    if (isAvailable) {
+                        availableCount++;
+                        statusElement.classList.remove('busy');
+                        statusElement.classList.add('available');
+                        if (nextBooking) {
+                            statusElement.querySelector('.status-text').textContent = `Tersedia (Booking ${nextBooking.startTime})`;
+                        } else {
+                            statusElement.querySelector('.status-text').textContent = 'Tersedia';
+                        }
+                    }
+                });
+
+                // Update statistics
+                document.getElementById('availableRooms').textContent = availableCount;
+                document.getElementById('todayBookings').textContent = todayBookingsCount;
+
+            } catch (error) {
+                console.error('Error updating live status:', error);
+                // Set default values on error
+                allRooms.forEach(room => {
+                    const statusElement = document.getElementById(`status-${room}`);
+                    if (statusElement) {
+                        statusElement.querySelector('.status-text').textContent = 'Tidak dapat memuat';
+                    }
+                });
+                document.getElementById('availableRooms').textContent = '-';
+                document.getElementById('todayBookings').textContent = '-';
+            }
+        }
+
+        // Booking Modal Functions
+        function closeBookingModal(event) {
+            if (event && event.target.id === 'bookingModal') {
+                document.getElementById('bookingModal').classList.remove('active');
+            } else if (!event) {
+                document.getElementById('bookingModal').classList.remove('active');
+            }
+        }
+
+        function showBookingModal(room) {
+            const modal = document.getElementById('bookingModal');
+            document.getElementById('bookingRoom').value = room;
+            document.getElementById('bookingModalTitle').textContent = `Pesan Ruangan - ${room}`;
+            
+            // Set default date to today
+            const today = new Date();
+            const year = today.getFullYear();
+            const month = String(today.getMonth() + 1).padStart(2, '0');
+            const day = String(today.getDate()).padStart(2, '0');
+            document.getElementById('bookingDate').value = `${year}-${month}-${day}`;
+
+            // Reset form
+            document.getElementById('bookingName').value = '';
+            document.getElementById('bookingEmail').value = '';
+            document.getElementById('bookingPeople').value = '';
+            document.getElementById('bookingStartTime').value = '';
+            document.getElementById('bookingEndTime').value = '';
+            document.getElementById('bookingTitle').value = '';
+            document.getElementById('bookingNotes').value = '';
+            document.getElementById('bookingError').style.display = 'none';
+            document.getElementById('bookingFormContent').style.display = 'block';
+            document.getElementById('bookingSuccessContent').style.display = 'none';
+            document.getElementById('availabilityStatus').classList.remove('show', 'available', 'unavailable');
+
+            modal.classList.add('active');
+        }
+
+        async function checkBookingAvailability() {
+            const room = document.getElementById('bookingRoom').value;
+            const date = document.getElementById('bookingDate').value;
+            const startTime = document.getElementById('bookingStartTime').value;
+            const endTime = document.getElementById('bookingEndTime').value;
+            const statusDiv = document.getElementById('availabilityStatus');
+            const statusText = document.getElementById('availabilityText');
+            const submitBtn = document.getElementById('submitBtn');
+
+            if (!date || !startTime || !endTime) {
+                statusDiv.classList.remove('show');
+                return;
+            }
+
+            // Validate time
+            if (startTime >= endTime) {
+                statusDiv.classList.add('show', 'unavailable');
+                statusText.textContent = 'Jam mulai harus lebih awal dari jam selesai';
+                submitBtn.disabled = true;
+                return;
+            }
+
+            statusDiv.classList.add('show');
+            statusText.textContent = 'Memeriksa ketersediaan...';
+
+            const allData = await loadAllData();
+            const normalizedDate = parseDate(date);
+
+            const conflictingBookings = allData.filter(booking =>
+                booking.room === room &&
+                booking.date === normalizedDate &&
+                !(endTime <= booking.startTime || startTime >= booking.endTime)
+            );
+
+            if (conflictingBookings.length === 0) {
+                statusDiv.classList.add('available');
+                statusDiv.classList.remove('unavailable');
+                statusText.textContent = '✓ Ruangan tersedia di jam tersebut';
+                submitBtn.disabled = false;
+            } else {
+                statusDiv.classList.add('unavailable');
+                statusDiv.classList.remove('available');
+                const conflicts = conflictingBookings.map(b => `${b.startTime}-${b.endTime} (${b.title})`).join(', ');
+                statusText.textContent = `✗ Ruangan tidak tersedia: ${conflicts}`;
+                submitBtn.disabled = true;
+            }
+        }
+
+        async function submitBooking(event) {
+            event.preventDefault();
+
+            const room = document.getElementById('bookingRoom').value;
+            const name = document.getElementById('bookingName').value;
+            const email = document.getElementById('bookingEmail').value;
+            const date = document.getElementById('bookingDate').value;
+            const startTime = document.getElementById('bookingStartTime').value;
+            const endTime = document.getElementById('bookingEndTime').value;
+            const title = document.getElementById('bookingTitle').value;
+            const people = document.getElementById('bookingPeople').value;
+            const notes = document.getElementById('bookingNotes').value;
+            const errorDiv = document.getElementById('bookingError');
+
+            // Validate - lebih detail untuk debugging
+            if (!room || !name || !email || !date || !startTime || !endTime || !title || !people) {
+                let missingFields = [];
+                if (!room) missingFields.push('Ruangan');
+                if (!name) missingFields.push('Nama');
+                if (!email) missingFields.push('Email');
+                if (!date) missingFields.push('Tanggal');
+                if (!startTime) missingFields.push('Jam Mulai');
+                if (!endTime) missingFields.push('Jam Selesai');
+                if (!title) missingFields.push('Judul Meeting');
+                if (!people) missingFields.push('Jumlah Orang');
+                
+                errorDiv.textContent = `Harap isi: ${missingFields.join(', ')}`;
+                errorDiv.style.display = 'block';
+                console.log('Missing fields:', missingFields);
+                return;
+            }
+
+            try {
+                // Check availability one more time
+                const allData = await loadAllData();
+                const normalizedDate = parseDate(date);
+
+                const conflicts = allData.filter(booking =>
+                    booking.room === room &&
+                    booking.date === normalizedDate &&
+                    !(endTime <= booking.startTime || startTime >= booking.endTime)
+                );
+
+                if (conflicts.length > 0) {
+                    errorDiv.textContent = 'Maaf, ruangan sudah dipesan di jam tersebut. Silakan periksa ketersediaan lagi.';
+                    errorDiv.style.display = 'block';
+                    return;
+                }
+
+                // Format date for display
+                const [year, month, day] = date.split('-');
+                const dateObj = new Date(year, month - 1, day);
+                const formattedDate = dateObj.toLocaleDateString('id-ID', {
+                    weekday: 'long',
+                    year: 'numeric',
+                    month: 'long',
+                    day: 'numeric'
+                });
+
+                // Show success message
+                document.getElementById('bookingFormContent').style.display = 'none';
+                document.getElementById('bookingSuccessContent').style.display = 'block';
+                
+                document.getElementById('successRoom').textContent = room;
+                document.getElementById('successName').textContent = name;
+                document.getElementById('successDate').textContent = formattedDate;
+                document.getElementById('successTime').textContent = `${startTime} - ${endTime}`;
+                document.getElementById('successTitle').textContent = title;
+
+                // Save to localStorage for backup
+                const bookingData = {
+                    room,
+                    name,
+                    email,
+                    date,
+                    startTime,
+                    endTime,
+                    title,
+                    people,
+                    notes,
+                    timestamp: new Date().toISOString()
+                };
+
+                // Send to Google Sheets via Apps Script using Image Beacon (no CORS issues)
+                const deploymentUrl = 'https://script.google.com/macros/s/AKfycbxcYMUrXcaVwHOoTNni0e7EOAkAxrLD3ZbykGjDRPbBC6pCZUvqPJIlgqItNXiWN2SDOA/exec';
+                
+                if (deploymentUrl !== 'PASTE_DEPLOYMENT_URL_HERE') {
+                    try {
+                        // Use sendBeacon method which doesn't trigger CORS preflight
+                        const formData = new FormData();
+                        formData.append('room', room);
+                        formData.append('name', name);
+                        formData.append('email', email);
+                        formData.append('date', date);
+                        formData.append('startTime', startTime);
+                        formData.append('endTime', endTime);
+                        formData.append('title', title);
+                        formData.append('people', people);
+                        formData.append('notes', notes);
+                        formData.append('timestamp', new Date().toISOString());
+                        
+                        // Try sendBeacon first (best method, no CORS blocking)
+                        const success = navigator.sendBeacon(deploymentUrl, formData);
+                        
+                        if (success) {
+                            console.log('✅ Booking berhasil dikirim ke Google Sheets');
+                        } else {
+                            // Fallback: Try fetch with FormData instead of JSON
+                            try {
+                                const response = await fetch(deploymentUrl, {
+                                    method: 'POST',
+                                    body: formData
+                                });
+                                console.log('✅ Booking berhasil dikirim ke Google Sheets (via fetch)');
+                            } catch (fetchError) {
+                                console.warn('⚠️ Tidak bisa kirim ke Sheets (akan disimpan di localStorage):', fetchError);
+                            }
+                        }
+                    } catch (error) {
+                        console.warn('⚠️ Tidak bisa kirim ke Sheets (akan disimpan di localStorage):', error);
+                    }
+                } else {
+                    console.log('⚠️ Deployment URL belum diset. Booking hanya disimpan di localStorage.');
+                }
+
+                let bookings = JSON.parse(localStorage.getItem('pendingBookings')) || [];
+                bookings.push(bookingData);
+                localStorage.setItem('pendingBookings', JSON.stringify(bookings));
+
+                console.log('Booking data saved:', bookingData);
+
+            } catch (error) {
+                console.error('Error submitting booking:', error);
+                errorDiv.textContent = 'Terjadi kesalahan saat mengirim booking. Silakan coba lagi.';
+                errorDiv.style.display = 'block';
+            }
+        }
+
+        // Modal functions for stats
+        function closeStatsModal(event) {
+            // If clicking on overlay, close it
+            if (event && event.target.id === 'statsModal') {
+                document.getElementById('statsModal').classList.remove('active');
+            } else if (!event) {
+                // If called directly from close button
+                document.getElementById('statsModal').classList.remove('active');
+            }
+        }
+
+        async function showStatModal(type) {
+            const modal = document.getElementById('statsModal');
+            const modalTitle = document.getElementById('modalTitle');
+            const modalContent = document.getElementById('modalContent');
+
+            const allData = await loadAllData();
+            const now = new Date();
+            const today = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`;
+            const currentTime = `${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}`;
+
+            let html = '';
+
+            if (type === 'total') {
+                modalTitle.textContent = 'Daftar Semua Ruangan';
+                html = '<div class="modal-list">';
+                allRooms.forEach(room => {
+                    html += `
+                        <div class="modal-item">
+                            <div class="modal-item-text">
+                                <div class="modal-item-name">${room}</div>
+                            </div>
+                        </div>
+                    `;
+                });
+                html += '</div>';
+            } else if (type === 'available') {
+                modalTitle.textContent = 'Ruangan Tersedia Sekarang';
+                const availableRoomsData = [];
+
+                allRooms.forEach(room => {
+                    const roomBookings = allData.filter(booking =>
+                        booking.room === room &&
+                        booking.date === today
+                    );
+
+                    let isAvailable = true;
+                    let nextBooking = null;
+
+                    for (const booking of roomBookings) {
+                        if (currentTime >= booking.startTime && currentTime < booking.endTime) {
+                            isAvailable = false;
+                            break;
+                        }
+                        if (currentTime < booking.startTime) {
+                            if (!nextBooking || booking.startTime < nextBooking.startTime) {
+                                nextBooking = booking;
+                            }
+                        }
+                    }
+
+                    if (isAvailable) {
+                        availableRoomsData.push({
+                            name: room,
+                            nextBooking: nextBooking
+                        });
+                    }
+                });
+
+                if (availableRoomsData.length === 0) {
+                    html = `
+                        <div class="modal-empty">
+                            <div class="modal-empty-icon">📅</div>
+                            <h3>Tidak Ada Ruangan Tersedia</h3>
+                            <p>Semua ruangan sedang digunakan saat ini.</p>
+                        </div>
+                    `;
+                } else {
+                    html = '<div class="modal-list">';
+                    availableRoomsData.forEach(room => {
+                        html += `
+                            <div class="modal-item">
+                                <div class="modal-item-text">
+                                    <div class="modal-item-name">${room.name}</div>
+                                    <div class="modal-item-info">
+                                        ${room.nextBooking ? `Booking selanjutnya: ${room.nextBooking.startTime}` : 'Tersedia sepanjang hari'}
+                                    </div>
+                                </div>
+                                <span class="modal-item-badge available">Tersedia</span>
+                            </div>
+                        `;
+                    });
+                    html += '</div>';
+                }
+            } else if (type === 'booking') {
+                modalTitle.textContent = 'Booking Hari Ini';
+                const bookingsToday = allData.filter(booking => booking.date === today);
+
+                if (bookingsToday.length === 0) {
+                    html = `
+                        <div class="modal-empty">
+                            <div class="modal-empty-icon">📋</div>
+                            <h3>Tidak Ada Booking Hari Ini</h3>
+                            <p>Tidak ada ruangan yang dipesan hari ini.</p>
+                        </div>
+                    `;
+                } else {
+                    html = '<div class="modal-list">';
+                    bookingsToday.forEach(booking => {
+                        html += `
+                            <div class="modal-item">
+                                <div class="modal-item-text">
+                                    <div class="modal-item-name">${booking.title}</div>
+                                    <div class="modal-item-info">
+                                        <strong>${booking.room}</strong> • ${booking.startTime} - ${booking.endTime}
+                                        <br>PIC: ${booking.pic}
+                                        ${booking.notes ? `<br>Catatan: ${booking.notes}` : ''}
+                                    </div>
+                                </div>
+                            </div>
+                        `;
+                    });
+                    html += '</div>';
+                }
+            }
+
+            modalContent.innerHTML = html;
+            modal.classList.add('active');
+        }
+
+        // Dynamic scroll effect functions (only for mobile)
+        function updateRoomCardsOnScroll() {
+            // Only apply effect when on rooms view and on mobile
+            if (document.getElementById('roomsView').style.display === 'none' || !isMobile) {
+                return;
+            }
+
+            const roomCards = document.querySelectorAll('.room-card');
+            const viewportHeight = window.innerHeight;
+            const viewportCenter = viewportHeight / 2;
+
+            // Find card closest to the center of the viewport
+            let closestCard = null;
+            let closestDistance = Infinity;
+
+            roomCards.forEach(card => {
+                const rect = card.getBoundingClientRect();
+                const cardCenter = rect.top + rect.height / 2;
+                const distance = Math.abs(viewportCenter - cardCenter);
+
+                if (distance < closestDistance) {
+                    closestDistance = distance;
+                    closestCard = card;
+                }
+            });
+
+            // Apply styles based on distance from center
+            roomCards.forEach(card => {
+                if (card === closestCard) {
+                    card.classList.add('focused');
+                    card.classList.remove('dimmed');
+                } else {
+                    card.classList.remove('focused');
+                    card.classList.add('dimmed');
+                }
+            });
+        }
+
+        // Throttled scroll event handler (only for mobile)
+        function throttledScrollHandler() {
+            if (!isMobile) return;
+            
+            if (scrollTimeout) {
+                clearTimeout(scrollTimeout);
+            }
+            
+            scrollTimeout = setTimeout(() => {
+                updateRoomCardsOnScroll();
+            }, 50); // Update every 50ms for smooth performance
+        }
+
+        // Handle window resize
+        function handleResize() {
+            const wasMobile = isMobile;
+            checkIsMobile();
+            
+            // If device type changed, reset effects
+            if (wasMobile !== isMobile) {
+                // Clear any existing mobile effects
+                const roomCards = document.querySelectorAll('.room-card');
+                roomCards.forEach(card => {
+                    card.classList.remove('focused', 'dimmed');
+                });
+                
+                // If now mobile, apply initial scroll effect
+                if (isMobile) {
+                    setTimeout(() => {
+                        updateRoomCardsOnScroll();
+                    }, 100);
+                }
+            }
+        }
+
+        // Initial load and periodic updates
+        checkIsMobile();
+        updateLiveStatus();
+        setInterval(updateLiveStatus, 60000); // Update every minute
+
+        // Add event listeners
+        window.addEventListener('scroll', throttledScrollHandler);
+        window.addEventListener('resize', handleResize);
+
+        // Initial call to set up room cards for mobile
+        if (isMobile) {
+            setTimeout(() => {
+                updateRoomCardsOnScroll();
+            }, 500);
+        }
     </script>
 </body>
+
 </html>
