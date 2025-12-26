@@ -31,7 +31,7 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: 
+            background:
                 radial-gradient(circle at 20% 50%, rgba(16, 185, 129, 0.05) 0%, transparent 50%),
                 radial-gradient(circle at 80% 80%, rgba(59, 130, 246, 0.05) 0%, transparent 50%);
             pointer-events: none;
@@ -54,6 +54,7 @@
                 opacity: 0;
                 transform: translateY(-20px);
             }
+
             to {
                 opacity: 1;
                 transform: translateY(0);
@@ -93,6 +94,7 @@
                 opacity: 0;
                 transform: translateX(-20px);
             }
+
             to {
                 opacity: 1;
                 transform: translateX(0);
@@ -122,6 +124,7 @@
                 opacity: 0;
                 transform: translateX(20px);
             }
+
             to {
                 opacity: 1;
                 transform: translateX(0);
@@ -172,9 +175,11 @@
                 opacity: 0;
                 transform: scale(0.3) translateY(50px);
             }
+
             50% {
                 transform: scale(1.05);
             }
+
             100% {
                 opacity: 1;
                 transform: scale(1) translateY(0);
@@ -514,19 +519,48 @@
                 opacity: 0;
                 transform: translateY(30px);
             }
+
             to {
                 opacity: 1;
                 transform: translateY(0);
             }
         }
 
-        .room-card:nth-child(1) { animation-delay: 0.1s; }
-        .room-card:nth-child(2) { animation-delay: 0.2s; }
-        .room-card:nth-child(3) { animation-delay: 0.3s; }
-        .room-card:nth-child(4) { animation-delay: 0.4s; }
-        .room-card:nth-child(5) { animation-delay: 0.5s; }
-        .room-card:nth-child(6) { animation-delay: 0.6s; }
-        .room-card:nth-child(7) { animation-delay: 0.7s; }
+        .room-card:nth-child(1) {
+            animation-delay: 0.1s;
+        }
+
+        .room-card:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+
+        .room-card:nth-child(3) {
+            animation-delay: 0.3s;
+        }
+
+        .room-card:nth-child(4) {
+            animation-delay: 0.4s;
+        }
+
+        .room-card:nth-child(5) {
+            animation-delay: 0.5s;
+        }
+
+        .room-card:nth-child(6) {
+            animation-delay: 0.6s;
+        }
+
+        .room-card:nth-child(7) {
+            animation-delay: 0.7s;
+        }
+
+        .room-card:nth-child(8) {
+            animation-delay: 0.8s;
+        }
+
+        .room-card:nth-child(9) {
+            animation-delay: 0.9s;
+        }
 
         .room-card::before {
             content: '';
@@ -745,6 +779,7 @@
                 opacity: 0;
                 transform: translateX(-20px);
             }
+
             to {
                 opacity: 1;
                 transform: translateX(0);
@@ -815,9 +850,17 @@
             animation: slideUp 0.5s ease-out backwards;
         }
 
-        .schedule-date-group .schedule-item:nth-child(2) { animation-delay: 0.1s; }
-        .schedule-date-group .schedule-item:nth-child(3) { animation-delay: 0.2s; }
-        .schedule-date-group .schedule-item:nth-child(4) { animation-delay: 0.3s; }
+        .schedule-date-group .schedule-item:nth-child(2) {
+            animation-delay: 0.1s;
+        }
+
+        .schedule-date-group .schedule-item:nth-child(3) {
+            animation-delay: 0.2s;
+        }
+
+        .schedule-date-group .schedule-item:nth-child(4) {
+            animation-delay: 0.3s;
+        }
 
         .schedule-item::before {
             content: '';
@@ -989,6 +1032,7 @@
                 opacity: 0;
                 transform: translateY(20px);
             }
+
             to {
                 opacity: 1;
                 transform: translateY(0);
@@ -1077,9 +1121,17 @@
             transition: all 0.4s ease;
         }
 
-        .stat-card:nth-child(1) { animation-delay: 0.5s; }
-        .stat-card:nth-child(2) { animation-delay: 0.6s; }
-        .stat-card:nth-child(3) { animation-delay: 0.7s; }
+        .stat-card:nth-child(1) {
+            animation-delay: 0.5s;
+        }
+
+        .stat-card:nth-child(2) {
+            animation-delay: 0.6s;
+        }
+
+        .stat-card:nth-child(3) {
+            animation-delay: 0.7s;
+        }
 
         .stat-card:hover {
             transform: translateY(-8px) scale(1.05);
@@ -1711,7 +1763,7 @@
                 <div class="stats-grid">
                     <div class="stat-card" onclick="showStatModal('total')">
                         <div class="stat-icon building"></div>
-                        <div class="stat-value" id="totalRooms">7</div>
+                        <div class="stat-value" id="totalRooms">9</div>
                         <div class="stat-label">Total Ruangan</div>
                     </div>
                     <div class="stat-card" onclick="showStatModal('available')">
@@ -1735,79 +1787,113 @@
                 <div class="room-card" onclick="showSchedule('Ningrat')" data-room="Ningrat">
                     <div class="room-name">Ningrat</div>
                     <div class="room-info">
-                        <span class="room-capacity">👥 8-10 orang</span>
+                        <span class="room-capacity">👥 2-5 orang</span>
                     </div>
                     <div class="room-status-live" id="status-Ningrat">
                         <span class="status-dot"></span>
                         <span class="status-text">Memuat...</span>
                     </div>
-                    <div class="room-action" onclick="event.stopPropagation(); showBookingModal('Ningrat')">📅 Pesan Ruangan</div>
+                    <div class="room-action" onclick="event.stopPropagation(); showBookingModal('Ningrat')">📅 Pesan
+                        Ruangan</div>
                 </div>
                 <div class="room-card" onclick="showSchedule('Juragan')" data-room="Juragan">
                     <div class="room-name">Juragan</div>
                     <div class="room-info">
-                        <span class="room-capacity">👥 6-8 orang</span>
+                        <span class="room-capacity">👥 2-4 orang</span>
                     </div>
                     <div class="room-status-live" id="status-Juragan">
                         <span class="status-dot"></span>
                         <span class="status-text">Memuat...</span>
                     </div>
-                    <div class="room-action" onclick="event.stopPropagation(); showBookingModal('Juragan')">📅 Pesan Ruangan</div>
+                    <div class="room-action" onclick="event.stopPropagation(); showBookingModal('Juragan')">📅 Pesan
+                        Ruangan</div>
                 </div>
                 <div class="room-card" onclick="showSchedule('Risk Taker')" data-room="Risk Taker">
                     <div class="room-name">Risk Taker</div>
                     <div class="room-info">
-                        <span class="room-capacity">👥 4-6 orang</span>
+                        <span class="room-capacity">👥 10-50 orang</span>
                     </div>
                     <div class="room-status-live" id="status-Risk Taker">
                         <span class="status-dot"></span>
                         <span class="status-text">Memuat...</span>
                     </div>
-                    <div class="room-action" onclick="event.stopPropagation(); showBookingModal('Risk Taker')">📅 Pesan Ruangan</div>
+                    <div class="room-action" onclick="event.stopPropagation(); showBookingModal('Risk Taker')">📅 Pesan
+                        Ruangan</div>
                 </div>
                 <div class="room-card" onclick="showSchedule('Gym')" data-room="Gym">
                     <div class="room-name">Gym</div>
                     <div class="room-info">
-                        <span class="room-capacity">👥 10-15 orang</span>
+                        <span class="room-capacity">👥 5-8 orang</span>
                     </div>
                     <div class="room-status-live" id="status-Gym">
                         <span class="status-dot"></span>
                         <span class="status-text">Memuat...</span>
                     </div>
-                    <div class="room-action" onclick="event.stopPropagation(); showBookingModal('Gym')">📅 Pesan Ruangan</div>
+                    <div class="room-action" onclick="event.stopPropagation(); showBookingModal('Gym')">📅 Pesan Ruangan
+                    </div>
                 </div>
                 <div class="room-card" onclick="showSchedule('Pak Aldi')" data-room="Pak Aldi">
                     <div class="room-name">Pak Aldi</div>
                     <div class="room-info">
-                        <span class="room-capacity">👥 4-6 orang</span>
+                        <span class="room-capacity">👥 5-10 orang</span>
                     </div>
                     <div class="room-status-live" id="status-Pak Aldi">
                         <span class="status-dot"></span>
                         <span class="status-text">Memuat...</span>
                     </div>
-                    <div class="room-action" onclick="event.stopPropagation(); showBookingModal('Pak Aldi')">📅 Pesan Ruangan</div>
+                    <div class="room-action" onclick="event.stopPropagation(); showBookingModal('Pak Aldi')">📅 Pesan
+                        Ruangan</div>
                 </div>
                 <div class="room-card" onclick="showSchedule('Bangor Outlet')" data-room="Bangor Outlet">
                     <div class="room-name">Bangor Outlet</div>
                     <div class="room-info">
-                        <span class="room-capacity">👥 5-8 orang</span>
+                        <span class="room-capacity">👥 10-20 orang</span>
                     </div>
                     <div class="room-status-live" id="status-Bangor Outlet">
                         <span class="status-dot"></span>
                         <span class="status-text">Memuat...</span>
                     </div>
-                    <div class="room-action" onclick="event.stopPropagation(); showBookingModal('Bangor Outlet')">📅 Pesan Ruangan</div>
+                    <div class="room-action" onclick="event.stopPropagation(); showBookingModal('Bangor Outlet')">📅
+                        Pesan Ruangan</div>
                 </div>
                 <div class="room-card" onclick="showSchedule('Pizza Ranjang Outlet')" data-room="Pizza Ranjang Outlet">
                     <div class="room-name">Pizza Ranjang Outlet</div>
                     <div class="room-info">
-                        <span class="room-capacity">👥 5-8 orang</span>
+                        <span class="room-capacity">👥 10-20 orang</span>
                     </div>
                     <div class="room-status-live" id="status-Pizza Ranjang Outlet">
                         <span class="status-dot"></span>
                         <span class="status-text">Memuat...</span>
                     </div>
-                    <div class="room-action" onclick="event.stopPropagation(); showBookingModal('Pizza Ranjang Outlet')">📅 Pesan Ruangan</div>
+                    <div class="room-action"
+                        onclick="event.stopPropagation(); showBookingModal('Pizza Ranjang Outlet')">📅 Pesan Ruangan
+                    </div>
+                </div>
+                <div class="room-card" onclick="showSchedule('Ruang Meeting Besar Bacep')" data-room="Ruang Meeting Besar Bacep">
+                    <div class="room-name">Ruang Meeting Besar Bacep</div>
+                    <div class="room-info">
+                        <span class="room-capacity">👥 5-15 orang</span>
+                    </div>
+                    <div class="room-status-live" id="status-Ruang Meeting Besar Bacep">
+                        <span class="status-dot"></span>
+                        <span class="status-text">Memuat...</span>
+                    </div>
+                    <div class="room-action"
+                        onclick="event.stopPropagation(); showBookingModal('Ruang Meeting Besar Bacep')">📅 Pesan Ruangan
+                    </div>
+                </div>
+                <div class="room-card" onclick="showSchedule('Ruang Meeting Kecil Bacep')" data-room="Ruang Meeting Kecil Bacep">
+                    <div class="room-name">Ruang Meeting Kecil Bacep</div>
+                    <div class="room-info">
+                        <span class="room-capacity">👥 2-4 orang</span>
+                    </div>
+                    <div class="room-status-live" id="status-Ruang Meeting Kecil Bacep">
+                        <span class="status-dot"></span>
+                        <span class="status-text">Memuat...</span>
+                    </div>
+                    <div class="room-action"
+                        onclick="event.stopPropagation(); showBookingModal('Ruang Meeting Kecil Bacep')">📅 Pesan Ruangan
+                    </div>
                 </div>
             </div>
         </div>
@@ -1971,14 +2057,16 @@
                         <p style="font-size: 0.9em; margin-top: 15px; color: #94a3b8;">
                             Detail booking Anda:
                         </p>
-                        <div style="background: rgba(30, 41, 59, 0.6); border-radius: 8px; padding: 15px; margin-top: 12px; text-align: left; font-size: 0.9em;">
+                        <div
+                            style="background: rgba(30, 41, 59, 0.6); border-radius: 8px; padding: 15px; margin-top: 12px; text-align: left; font-size: 0.9em;">
                             <p><strong>Ruangan:</strong> <span id="successRoom"></span></p>
                             <p><strong>Nama:</strong> <span id="successName"></span></p>
                             <p><strong>Tanggal:</strong> <span id="successDate"></span></p>
                             <p><strong>Jam:</strong> <span id="successTime"></span></p>
                             <p><strong>Meeting:</strong> <span id="successTitle"></span></p>
                         </div>
-                        <button class="booking-btn booking-btn-submit" onclick="closeBookingModal()" style="margin-top: 20px;">
+                        <button class="booking-btn booking-btn-submit" onclick="closeBookingModal()"
+                            style="margin-top: 20px;">
                             Tutup
                         </button>
                     </div>
@@ -2015,7 +2103,7 @@
         const CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTvvHewile8pFiTtk_E11rk27pUGrQUbVrWjwQi45K1VOZC0Kuk_0oKsnIbXGSmtDuinyhS0uOnJjkH/pub?output=csv';
 
         let currentData = [];
-        let allRooms = ['Ningrat', 'Juragan', 'Risk Taker', 'Gym', 'Pak Aldi', 'Bangor Outlet', 'Pizza Ranjang Outlet'];
+        let allRooms = ['Ningrat', 'Juragan', 'Risk Taker', 'Gym', 'Pak Aldi', 'Bangor Outlet', 'Pizza Ranjang Outlet', 'Ruang Meeting Besar Bacep', 'Ruang Meeting Kecil Bacep'];
         let scrollTimeout;
         let isMobile = false;
 
@@ -2686,7 +2774,7 @@
             const modal = document.getElementById('bookingModal');
             document.getElementById('bookingRoom').value = room;
             document.getElementById('bookingModalTitle').textContent = `Pesan Ruangan - ${room}`;
-            
+
             // Set default date to today
             const today = new Date();
             const year = today.getFullYear();
@@ -2783,7 +2871,7 @@
                 if (!endTime) missingFields.push('Jam Selesai');
                 if (!title) missingFields.push('Judul Meeting');
                 if (!people) missingFields.push('Jumlah Orang');
-                
+
                 errorDiv.textContent = `Harap isi: ${missingFields.join(', ')}`;
                 errorDiv.style.display = 'block';
                 console.log('Missing fields:', missingFields);
@@ -2820,7 +2908,7 @@
                 // Show success message
                 document.getElementById('bookingFormContent').style.display = 'none';
                 document.getElementById('bookingSuccessContent').style.display = 'block';
-                
+
                 document.getElementById('successRoom').textContent = room;
                 document.getElementById('successName').textContent = name;
                 document.getElementById('successDate').textContent = formattedDate;
@@ -2843,7 +2931,7 @@
 
                 // Send to Google Sheets via Apps Script using Image Beacon (no CORS issues)
                 const deploymentUrl = 'https://script.google.com/macros/s/AKfycbxcYMUrXcaVwHOoTNni0e7EOAkAxrLD3ZbykGjDRPbBC6pCZUvqPJIlgqItNXiWN2SDOA/exec';
-                
+
                 if (deploymentUrl !== 'PASTE_DEPLOYMENT_URL_HERE') {
                     try {
                         // Use sendBeacon method which doesn't trigger CORS preflight
@@ -2858,10 +2946,10 @@
                         formData.append('people', people);
                         formData.append('notes', notes);
                         formData.append('timestamp', new Date().toISOString());
-                        
+
                         // Try sendBeacon first (best method, no CORS blocking)
                         const success = navigator.sendBeacon(deploymentUrl, formData);
-                        
+
                         if (success) {
                             console.log('✅ Booking berhasil dikirim ke Google Sheets');
                         } else {
@@ -3067,11 +3155,11 @@
         // Throttled scroll event handler (only for mobile)
         function throttledScrollHandler() {
             if (!isMobile) return;
-            
+
             if (scrollTimeout) {
                 clearTimeout(scrollTimeout);
             }
-            
+
             scrollTimeout = setTimeout(() => {
                 updateRoomCardsOnScroll();
             }, 50); // Update every 50ms for smooth performance
@@ -3081,7 +3169,7 @@
         function handleResize() {
             const wasMobile = isMobile;
             checkIsMobile();
-            
+
             // If device type changed, reset effects
             if (wasMobile !== isMobile) {
                 // Clear any existing mobile effects
@@ -3089,7 +3177,7 @@
                 roomCards.forEach(card => {
                     card.classList.remove('focused', 'dimmed');
                 });
-                
+
                 // If now mobile, apply initial scroll effect
                 if (isMobile) {
                     setTimeout(() => {
