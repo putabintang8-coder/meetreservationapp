@@ -726,6 +726,11 @@
 
         /* Mobile scroll effect */
         @media (max-width: 768px) {
+            body {
+                background-attachment: scroll;
+                min-height: 100vh;
+            }
+
             .room-card.focused {
                 transform: scale(1.05);
                 box-shadow: 0 15px 40px rgba(16, 185, 129, 0.3);
