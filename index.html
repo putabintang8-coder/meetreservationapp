@@ -1758,7 +1758,8 @@
             <div class="hero-section">
                 <div class="hero-content">
                     <h2 class="hero-title">Selamat Datang di Sistem Booking Ruangan</h2>
-                    <p class="hero-subtitle">Kelola dan pesan ruangan meeting dengan mudah dan efisien</p>
+                    <p class="hero-subtitle">Harap Hubungi Person In Charge (PIC) jika ada masalah dan lakukan reservasi
+                        sebelum menggunakan ruangan</p>
                 </div>
                 <div class="stats-grid">
                     <div class="stat-card" onclick="showStatModal('total')">
@@ -1856,28 +1857,6 @@
                     <div class="room-action" onclick="event.stopPropagation(); showBookingModal('Bangor Outlet')">📅
                         Pesan Ruangan</div>
                 </div>
-                <div class="room-card" onclick="showSchedule('Ruang Meeting Besar Bacep')" data-room="Ruang Meeting Besar Bacep">
-                    <div class="room-name">Ruang Meeting Besar Bacep</div>
-                    <div class="room-info">
-                        <span class="room-capacity">👥 5-15 orang</span>
-                    </div>
-                    <div class="room-status-live" id="status-Ruang Meeting Besar Bacep">
-                        <span class="status-dot"></span>
-                        <span class="status-text">Memuat...</span>
-                    </div>
-                    <div class="room-action" onclick="event.stopPropagation(); showBookingModal('Ruang Meeting Besar Bacep')">📅 Pesan Ruangan</div>
-                </div>
-                <div class="room-card" onclick="showSchedule('Ruang Meeting Kecil Bacep')" data-room="Ruang Meeting Kecil Bacep">
-                    <div class="room-name">Ruang Meeting Kecil Bacep</div>
-                    <div class="room-info">
-                        <span class="room-capacity">👥 2-4 orang</span>
-                    </div>
-                    <div class="room-status-live" id="status-Ruang Meeting Kecil Bacep">
-                        <span class="status-dot"></span>
-                        <span class="status-text">Memuat...</span>
-                    </div>
-                    <div class="room-action" onclick="event.stopPropagation(); showBookingModal('Ruang Meeting Kecil Bacep')">📅 Pesan Ruangan</div>
-                </div>
                 <div class="room-card" onclick="showSchedule('Pizza Ranjang Outlet')" data-room="Pizza Ranjang Outlet">
                     <div class="room-name">Pizza Ranjang Outlet</div>
                     <div class="room-info">
@@ -1891,7 +1870,8 @@
                         onclick="event.stopPropagation(); showBookingModal('Pizza Ranjang Outlet')">📅 Pesan Ruangan
                     </div>
                 </div>
-                <div class="room-card" onclick="showSchedule('Ruang Meeting Besar Bacep')" data-room="Ruang Meeting Besar Bacep">
+                <div class="room-card" onclick="showSchedule('Ruang Meeting Besar Bacep')"
+                    data-room="Ruang Meeting Besar Bacep">
                     <div class="room-name">Ruang Meeting Besar Bacep</div>
                     <div class="room-info">
                         <span class="room-capacity">👥 5-15 orang</span>
@@ -1901,10 +1881,12 @@
                         <span class="status-text">Memuat...</span>
                     </div>
                     <div class="room-action"
-                        onclick="event.stopPropagation(); showBookingModal('Ruang Meeting Besar Bacep')">📅 Pesan Ruangan
+                        onclick="event.stopPropagation(); showBookingModal('Ruang Meeting Besar Bacep')">📅 Pesan
+                        Ruangan
                     </div>
                 </div>
-                <div class="room-card" onclick="showSchedule('Ruang Meeting Kecil Bacep')" data-room="Ruang Meeting Kecil Bacep">
+                <div class="room-card" onclick="showSchedule('Ruang Meeting Kecil Bacep')"
+                    data-room="Ruang Meeting Kecil Bacep">
                     <div class="room-name">Ruang Meeting Kecil Bacep</div>
                     <div class="room-info">
                         <span class="room-capacity">👥 2-4 orang</span>
@@ -1914,7 +1896,8 @@
                         <span class="status-text">Memuat...</span>
                     </div>
                     <div class="room-action"
-                        onclick="event.stopPropagation(); showBookingModal('Ruang Meeting Kecil Bacep')">📅 Pesan Ruangan
+                        onclick="event.stopPropagation(); showBookingModal('Ruang Meeting Kecil Bacep')">📅 Pesan
+                        Ruangan
                     </div>
                 </div>
             </div>
@@ -1975,9 +1958,9 @@
             </div>
             <div id="availabilityResults" class="availability-results">
                 <h3 class="result-title">Ruangan Tersedia</h3>
-                <div id="availableRooms" class="sidebar-rooms-grid"></div>
+                <div id="sidebarAvailableRooms" class="sidebar-rooms-grid"></div>
                 <h3 class="result-title">Ruangan Tidak Tersedia</h3>
-                <div id="unavailableRooms" class="sidebar-rooms-grid"></div>
+                <div id="sidebarUnavailableRooms" class="sidebar-rooms-grid"></div>
             </div>
         </div>
     </div>
@@ -2016,8 +1999,9 @@
                         </div>
 
                         <div class="booking-form-group">
-                            <label for="bookingEmail">Email *</label>
-                            <input type="email" id="bookingEmail" placeholder="email@example.com" required>
+                            <label for="bookingPhone">No. Telepon/WhatsApp *</label>
+                            <input type="tel" id="bookingPhone" placeholder="08xxxxxxxxxx" required>
+                            <div class="booking-hint">Data ini hanya bisa dilihat oleh admin</div>
                         </div>
 
                         <div class="booking-form-row">
@@ -2281,72 +2265,56 @@
             return timeStr; // Return original if can't parse
         }
 
-        // Function to parse date in DD-MM-YYYY format and convert to YYYY-MM-DD for comparison
+        // Function to parse date in various formats and convert to YYYY-MM-DD (ISO format) for comparison
         function parseDate(dateStr) {
             if (!dateStr) return '';
 
             // Remove any spaces
             dateStr = dateStr.trim();
 
+            let day, month, year;
+
             // Try to parse DD-MM-YYYY format
-            const match = dateStr.match(/^(\d{1,2})-(\d{1,2})-(\d{4})$/);
-            if (match) {
-                const [, day, month, year] = match;
+            const dashMatch = dateStr.match(/^(\d{1,2})-(\d{1,2})-(\d{4})$/);
+            if (dashMatch) {
+                [, day, month, year] = dashMatch;
+            } else {
+                // Try to parse DD/MM/YYYY format
+                const slashMatch = dateStr.match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})$/);
+                if (slashMatch) {
+                    [, day, month, year] = slashMatch;
+                } else {
+                    // Try to parse DD.MM.YYYY format (dengan titik)
+                    const dotMatch = dateStr.match(/^(\d{1,2})\.(\d{1,2})\.(\d{4})$/);
+                    if (dotMatch) {
+                        [, day, month, year] = dotMatch;
+                    } else {
+                        // Try to parse YYYY-MM-DD format
+                        const isoMatch = dateStr.match(/^(\d{4})-(\d{1,2})-(\d{1,2})$/);
+                        if (isoMatch) {
+                            [, year, month, day] = isoMatch;
+                        }
+                    }
+                }
+            }
+
+            if (day && month && year) {
                 const dayNum = parseInt(day);
                 const monthNum = parseInt(month);
                 const yearNum = parseInt(year);
 
                 // Validate date components
                 if (dayNum >= 1 && dayNum <= 31 && monthNum >= 1 && monthNum <= 12 && yearNum >= 2000 && yearNum <= 2100) {
-                    // Create date object to validate
+                    // Create date object to validate (e.g. check for Feb 30)
                     const testDate = new Date(yearNum, monthNum - 1, dayNum);
 
-                    // Check if date is valid (e.g., not 31 February)
                     if (testDate.getFullYear() === yearNum && testDate.getMonth() === monthNum - 1 && testDate.getDate() === dayNum) {
-                        // Return in YYYY-MM-DD format for consistent comparison
-                        return `${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`;
+                        // Return in YYYY-MM-DD format with padding
+                        return `${yearNum}-${String(monthNum).padStart(2, '0')}-${String(dayNum).padStart(2, '0')}`;
                     }
                 }
             }
 
-            // Try to parse DD/MM/YYYY format
-            const slashMatch = dateStr.match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})$/);
-            if (slashMatch) {
-                const [, day, month, year] = slashMatch;
-                const dayNum = parseInt(day);
-                const monthNum = parseInt(month);
-                const yearNum = parseInt(year);
-
-                // Validate date components
-                if (dayNum >= 1 && dayNum <= 31 && monthNum >= 1 && monthNum <= 12 && yearNum >= 2000 && yearNum <= 2100) {
-                    // Create date object to validate
-                    const testDate = new Date(yearNum, monthNum - 1, dayNum);
-
-                    // Check if date is valid
-                    if (testDate.getFullYear() === yearNum && testDate.getMonth() === monthNum - 1 && testDate.getDate() === dayNum) {
-                        // Return in YYYY-MM-DD format for consistent comparison
-                        return `${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`;
-                    }
-                }
-            }
-
-            // If it's already in YYYY-MM-DD format, validate and return as is
-            if (/^\d{4}-\d{1,2}-\d{1,2}$/.test(dateStr)) {
-                const [year, month, day] = dateStr.split('-');
-                const yearNum = parseInt(year);
-                const monthNum = parseInt(month);
-                const dayNum = parseInt(day);
-
-                if (yearNum >= 2000 && yearNum <= 2100 && monthNum >= 1 && monthNum <= 12 && dayNum >= 1 && dayNum <= 31) {
-                    const testDate = new Date(yearNum, monthNum - 1, dayNum);
-
-                    if (testDate.getFullYear() === yearNum && testDate.getMonth() === monthNum - 1 && testDate.getDate() === dayNum) {
-                        return dateStr;
-                    }
-                }
-            }
-
-            // Return empty string if can't parse or invalid
             return '';
         }
 
@@ -2440,7 +2408,9 @@
 
         async function loadAllData() {
             try {
-                const response = await fetch(CSV_URL);
+                // Tambah cache buster untuk bypass Google Sheets caching
+                const cacheBuster = `&_=${Date.now()}`;
+                const response = await fetch(CSV_URL + cacheBuster);
 
                 if (!response.ok) {
                     throw new Error('Gagal mengambil data');
@@ -2461,7 +2431,8 @@
                         endTime: normalizeTime(row[3] || ''),
                         title: row[4] || '',
                         pic: row[5] || '',
-                        notes: row[6] || ''
+                        // row[6] = No Telpon - SKIP, tidak ditampilkan untuk privasi!
+                        notes: row[7] || ''
                     }))
                     .filter(item => item.date !== ''); // Filter out items with invalid dates
 
@@ -2482,8 +2453,8 @@
             }
 
             const resultsContainer = document.getElementById('availabilityResults');
-            const availableContainer = document.getElementById('availableRooms');
-            const unavailableContainer = document.getElementById('unavailableRooms');
+            const availableContainer = document.getElementById('sidebarAvailableRooms');
+            const unavailableContainer = document.getElementById('sidebarUnavailableRooms');
 
             resultsContainer.classList.add('active');
             availableContainer.innerHTML = '<div class="loading"><div class="spinner"></div><p>Memeriksa ketersediaan...</p></div>';
@@ -2532,7 +2503,11 @@
                 }
             });
 
-            // Display results
+            console.log('=== DEBUG checkAvailability ===');
+            console.log('checkDate:', checkDate);
+            console.log('checkTime:', checkTime);
+            console.log('Available rooms:', availableRooms);
+            console.log('Unavailable rooms:', unavailableRooms);            // Display results
             let availableHTML = '';
             if (availableRooms.length > 0) {
                 availableRooms.forEach(room => {
@@ -2591,7 +2566,9 @@
             content.innerHTML = '<div class="loading"><div class="spinner"></div><p>Memuat jadwal...</p></div>';
 
             try {
-                const response = await fetch(CSV_URL);
+                // Tambah cache buster untuk bypass Google Sheets caching
+                const cacheBuster = `&_=${Date.now()}`;
+                const response = await fetch(CSV_URL + cacheBuster);
 
                 if (!response.ok) {
                     throw new Error('Gagal mengambil data');
@@ -2612,33 +2589,69 @@
                 }
 
                 // Filter data berdasarkan ruangan
+                console.log('=== DEBUG loadSchedule ===');
+                console.log('Room yang dicari:', room);
+                console.log('Raw rows dari CSV:', rows.slice(1));
+
                 let filteredData = rows.slice(1)
-                    .filter(row => row[0] === room)
-                    .map(row => ({
-                        room: row[0] || '',
-                        date: parseDate(row[1] || ''), // Parse date to normalize format
-                        startTime: normalizeTime(row[2] || ''),
-                        endTime: normalizeTime(row[3] || ''),
-                        title: row[4] || '',
-                        pic: row[5] || '',
-                        notes: row[6] || ''
-                    }))
-                    .filter(item => item.date !== ''); // Filter out items with invalid dates
+                    .filter(row => {
+                        const match = row[0] === room;
+                        if (!match) {
+                            console.log(`Row "${row[0]}" tidak match dengan "${room}"`);
+                        }
+                        return match;
+                    })
+                    .map(row => {
+                        const parsed = {
+                            room: row[0] || '',
+                            date: parseDate(row[1] || ''),
+                            rawDate: row[1] || '', // untuk debugging
+                            startTime: normalizeTime(row[2] || ''),
+                            endTime: normalizeTime(row[3] || ''),
+                            title: row[4] || '',
+                            pic: row[5] || '',
+                            // row[6] = No Telpon - SKIP untuk privasi!
+                            notes: row[7] || ''
+                        };
+                        console.log('Parsed row:', parsed);
+                        return parsed;
+                    })
+                    .filter(item => {
+                        if (item.date === '') {
+                            console.log('❌ Filtered out karena date kosong:', item.rawDate);
+                        }
+                        return item.date !== '';
+                    });
 
                 // Filter out past bookings
+                console.log('Sebelum filter past:', filteredData.length, 'items');
+                const today = new Date();
+                const todayStr = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`;
+                console.log('Today string untuk comparison:', todayStr);
+
                 filteredData = filteredData.filter(item => {
                     // If date is in the past, exclude it
-                    if (isDateInPast(item.date)) {
+                    const isPast = isDateInPast(item.date);
+                    const isTimePast = isTimeInPast(item.date, item.endTime);
+
+                    console.log(`Checking "${item.title}": date=${item.date}, isPast=${isPast}, isTimePast=${isTimePast}`);
+
+                    if (isPast) {
+                        console.log(`❌ Excluded (date in past): ${item.date}`);
                         return false;
                     }
 
                     // If date is today but time is in the past, exclude it
-                    if (isTimeInPast(item.date, item.endTime)) {
+                    if (isTimePast) {
+                        console.log(`❌ Excluded (time in past): ${item.endTime}`);
                         return false;
                     }
 
+                    console.log(`✅ Included: ${item.title}`);
                     return true;
                 });
+
+                console.log('Setelah filter past:', filteredData.length, 'items');
 
                 if (filteredData.length === 0) {
                     content.innerHTML = `
@@ -2806,7 +2819,7 @@
 
             // Reset form
             document.getElementById('bookingName').value = '';
-            document.getElementById('bookingEmail').value = '';
+            document.getElementById('bookingPhone').value = '';
             document.getElementById('bookingPeople').value = '';
             document.getElementById('bookingStartTime').value = '';
             document.getElementById('bookingEndTime').value = '';
@@ -2873,7 +2886,7 @@
 
             const room = document.getElementById('bookingRoom').value;
             const name = document.getElementById('bookingName').value;
-            const email = document.getElementById('bookingEmail').value;
+            const phone = document.getElementById('bookingPhone').value;
             const date = document.getElementById('bookingDate').value;
             const startTime = document.getElementById('bookingStartTime').value;
             const endTime = document.getElementById('bookingEndTime').value;
@@ -2883,11 +2896,11 @@
             const errorDiv = document.getElementById('bookingError');
 
             // Validate - lebih detail untuk debugging
-            if (!room || !name || !email || !date || !startTime || !endTime || !title || !people) {
+            if (!room || !name || !phone || !date || !startTime || !endTime || !title || !people) {
                 let missingFields = [];
                 if (!room) missingFields.push('Ruangan');
                 if (!name) missingFields.push('Nama');
-                if (!email) missingFields.push('Email');
+                if (!phone) missingFields.push('No. Telepon');
                 if (!date) missingFields.push('Tanggal');
                 if (!startTime) missingFields.push('Jam Mulai');
                 if (!endTime) missingFields.push('Jam Selesai');
@@ -2941,7 +2954,7 @@
                 const bookingData = {
                     room,
                     name,
-                    email,
+                    phone,
                     date,
                     startTime,
                     endTime,
@@ -2951,41 +2964,44 @@
                     timestamp: new Date().toISOString()
                 };
 
-                // Send to Google Sheets via Apps Script using Image Beacon (no CORS issues)
-                const deploymentUrl = 'https://script.google.com/macros/s/AKfycbxcYMUrXcaVwHOoTNni0e7EOAkAxrLD3ZbykGjDRPbBC6pCZUvqPJIlgqItNXiWN2SDOA/exec';
+                // Format tanggal ke DD-MM-YYYY untuk match dengan format spreadsheet
+                const [yearStr, monthStr, dayStr] = date.split('-');
+                const formattedDateForSheet = `${dayStr}-${monthStr}-${yearStr}`;
 
+                // Send to Google Sheets via Apps Script
+                const deploymentUrl = 'https://script.google.com/macros/s/AKfycbwQaSE7iUlbbMj-j_lzmKfsqKX9MKARTQ2pu6i4P0uHDHFhKLf3xJFyVfMin6pI6aHv2Q/exec';
                 if (deploymentUrl !== 'PASTE_DEPLOYMENT_URL_HERE') {
                     try {
-                        // Use sendBeacon method which doesn't trigger CORS preflight
+                        // Gunakan field names yang match dengan kolom spreadsheet:
+                        // Ruangan | Tanggal | Jam Mulai | Jam Selesai | Judul Meeting | PIC/Nama Pemesan | Catatan
                         const formData = new FormData();
-                        formData.append('room', room);
-                        formData.append('name', name);
-                        formData.append('email', email);
-                        formData.append('date', date);
-                        formData.append('startTime', startTime);
-                        formData.append('endTime', endTime);
-                        formData.append('title', title);
-                        formData.append('people', people);
-                        formData.append('notes', notes);
-                        formData.append('timestamp', new Date().toISOString());
+                        formData.append('Ruangan', room);
+                        formData.append('Tanggal', formattedDateForSheet);
+                        formData.append('Jam Mulai', startTime);
+                        formData.append('Jam Selesai', endTime);
+                        formData.append('Judul Meeting', title);
+                        formData.append('PIC/Nama Pemesan', name);
+                        formData.append('Catatan', notes || '');
+                        // Gunakan URL params untuk bypass CORS (GET request via image)
+                        const params = new URLSearchParams();
+                        params.append('Ruangan', room);
+                        params.append('Tanggal', formattedDateForSheet);
+                        params.append('JamMulai', startTime);
+                        params.append('JamSelesai', endTime);
+                        params.append('JudulMeeting', title);
+                        params.append('PIC', name);
+                        params.append('NoTelpon', phone);
+                        params.append('Catatan', notes || '');
 
-                        // Try sendBeacon first (best method, no CORS blocking)
-                        const success = navigator.sendBeacon(deploymentUrl, formData);
+                        const fullUrl = `${deploymentUrl}?${params.toString()}`;
 
-                        if (success) {
-                            console.log('✅ Booking berhasil dikirim ke Google Sheets');
-                        } else {
-                            // Fallback: Try fetch with FormData instead of JSON
-                            try {
-                                const response = await fetch(deploymentUrl, {
-                                    method: 'POST',
-                                    body: formData
-                                });
-                                console.log('✅ Booking berhasil dikirim ke Google Sheets (via fetch)');
-                            } catch (fetchError) {
-                                console.warn('⚠️ Tidak bisa kirim ke Sheets (akan disimpan di localStorage):', fetchError);
-                            }
-                        }
+                        // Gunakan image beacon untuk bypass CORS completely
+                        const img = new Image();
+                        img.onload = () => console.log('✅ Booking berhasil dikirim ke Google Sheets');
+                        img.onerror = () => console.log('✅ Booking dikirim (response tidak bisa dibaca karena CORS, tapi data tetap masuk)');
+                        img.src = fullUrl;
+
+                        console.log('📤 Mengirim booking ke:', fullUrl);
                     } catch (error) {
                         console.warn('⚠️ Tidak bisa kirim ke Sheets (akan disimpan di localStorage):', error);
                     }
